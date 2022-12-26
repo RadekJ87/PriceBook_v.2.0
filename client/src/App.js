@@ -11,6 +11,7 @@ import Login from "./views/Login";
 import Products from "./views/Products";
 import Options from "./views/Options";
 import Error from "./views/Error";
+import {Box} from "@mui/material";
 
 const Layout = () => {
     return (
@@ -52,11 +53,9 @@ const router = createBrowserRouter([
 
 const App = () => {
     return (
-        <div className="app">
-            <div className="container">
+        <Box>
                 <RouterProvider router={router}/>
-            </div>
-        </div>
+        </Box>
     );
 }
 

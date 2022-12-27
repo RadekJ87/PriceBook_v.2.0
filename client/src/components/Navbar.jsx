@@ -8,6 +8,8 @@ import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Brand from '../images/logo_jasne.png';
+import {IconButton, Menu, MenuItem} from "@mui/material";
+import MenuIcon from '@mui/icons-material/Menu';
 
 
 // do opcji menu poza auth
@@ -78,7 +80,7 @@ const Navbar = () => {
                                 to={`/login`}
                                 sx={{my: 2, color: 'black', display: 'block', fontFamily: "Oswald", fontWeight: "200"}}
                             >
-                                Zaloguj
+                                Logowanie
                             </Button>)
                             : (<Button
                                 component={Link}
@@ -119,8 +121,113 @@ const Navbar = () => {
                         </Typography>
                         <Avatar sx={{marginRight: "10px"}} alt={user.username} src={user.img}/>
                     </Box>) : (<Box sx={{flex: 2}}></Box>)}
+
                     {/* widok dla mobile*/}
-                    {/*todo*/}
+
+                    <Box className="mui-options-sm" sx={{flex: 1, display: {xs: 'flex', md: 'none'}}}>
+                        <IconButton
+                            size="large"
+                            aria-haspopup="true"
+                            onClick={handleOpenNavMenu}
+                            color="black"
+                        >
+                            <MenuIcon/>
+                        </IconButton>
+                        <Menu
+                            anchorEl={anchorElNav}
+                            anchorOrigin={{
+                                vertical: 'bottom',
+                                horizontal: 'left',
+                            }}
+                            keepMounted
+                            transformOrigin={{
+                                vertical: 'top',
+                                horizontal: 'left',
+                            }}
+                            open={Boolean(anchorElNav)}
+                            onClose={handleCloseNavMenu}
+                            sx={{
+                                display: {xs: 'block', md: 'none'},
+                                color: "black"
+                            }}
+                        >
+                            {pages.map((page) => (
+                                <MenuItem
+                                    component={Link}
+                                    to={page.url}
+                                    key={page.desc}
+                                    onClick={handleCloseNavMenu}>
+                                    <Typography textAlign="center">{page.desc}</Typography>
+                                </MenuItem>
+                            ))}
+                            {user ?
+                                (<MenuItem
+                                    component={Link}
+                                    to={'/logout'}
+                                    onClick={handleCloseNavMenu}>
+                                    <Typography textAlign="center">Wyloguj</Typography>
+                                </MenuItem>)
+                                :
+                                (<MenuItem
+                                    component={Link}
+                                    to={'/login'}
+                                    onClick={handleCloseNavMenu}>
+                                    <Typography textAlign="center">Logowanie</Typography>
+                                </MenuItem>)}
+                        </Menu>
+                    </Box>
+                    <Box sx={{flex: 5, display: {xs: 'flex', md: 'none'}, justifyContent: "flex-start"}}>
+                        <img width="40px" src={Brand} alt=""/>
+                    </Box>
+                    {user ? (<Box className="mui-user-sm" sx={{
+                        display: {xs: 'flex', md: 'none'},
+                        flex: 100,
+                        justifyContent: "flex-end",
+                        alignItems: "center",
+                    }}>
+                        < Typography
+                            variant="p"
+                            noWrap
+                            component="p"
+                            sx={{
+                                mr: 2,
+                                p: 1,
+                                display: {xs: 'flex', md: 'none'},
+                                fontFamily: 'Roboto',
+                                fontWeight: 400,
+                                fontSize: "0.7rem",
+                                letterSpacing: "1px",
+                                color: "black",
+                            }}
+                        >
+                            {user.username}
+                        </Typography>
+                        <Avatar sx={{marginRight: "10px"}} alt={user.username} src={user.img}/>
+                    </Box>) : (<Box sx={{
+                        flex: 100,
+                        display: {xs: 'flex', md: 'none'},
+                        justifyContent: "flex-end",
+                        alignItems: "center"
+                    }}>
+                        < Typography
+                            variant="p"
+                            noWrap
+                            component="p"
+                            sx={{
+                                mr: 2,
+                                p: 1,
+                                display: {xs: 'flex', md: 'none'},
+                                fontFamily: 'Roboto',
+                                fontWeight: 400,
+                                fontSize: "0.7rem",
+                                letterSpacing: "1px",
+                                color: "black",
+                            }}
+                        >
+                            Proszę się zalogować
+                        </Typography>
+                        <Avatar sx={{marginRight: "10px"}} alt="?">?</Avatar>
+                        </Box>)}
                 </Toolbar>
             </Container>
         </AppBar>

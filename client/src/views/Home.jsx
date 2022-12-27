@@ -1,15 +1,15 @@
 import React from 'react';
 import Box from '@mui/material/Box';
-import Logo from "../images/jasne.png"
-import Background from "../images/background.avif";
+import Logo from '../images/jasne.png';
+import Background from '../images/background.avif';
 
 
 const Home = () => {
     return (
         <Box
             sx={{
+                height: "100vh",
                 position: "relative",
-                height: "90vh",
                 width: "100%",
                 display: "flex",
                 alignItems: "center",

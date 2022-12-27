@@ -10,6 +10,7 @@ import Button from '@mui/material/Button';
 import Brand from '../images/logo_jasne.png';
 import {IconButton, Menu, MenuItem} from "@mui/material";
 import MenuIcon from '@mui/icons-material/Menu';
+import {useState} from "react";
 
 
 // do opcji menu poza auth
@@ -34,11 +35,12 @@ const fakeUser = {
     img: "https://randomuser.me/api/portraits/thumb/men/75.jpg",
 }
 
-const Navbar = () => {
 
+const Navbar = () => {
+    const [activeMenu, setActiveMenu] = useState('Strona główna');
     const [anchorElNav, setAnchorElNav] = React.useState(null);
-    const [user, setUser] = React.useState(fakeUser);
-    // const [user, setUser] = React.useState(null);
+    // const [user, setUser] = React.useState(fakeUser);
+    const [user, setUser] = React.useState(null);
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
@@ -47,6 +49,10 @@ const Navbar = () => {
     const handleCloseNavMenu = () => {
         setAnchorElNav(null);
     };
+
+    const isActive = descritption => {
+        return descritption === activeMenu;
+    }
 
 
     // klasy 'mui-*' do usunięcia przy refactor
@@ -62,17 +68,23 @@ const Navbar = () => {
                         flex: 8,
                         display: {xs: 'none', md: 'flex'},
                         justifyContent: "center",
+                        alignItems: "center",
                         gap: "20px",
                     }}>
                         {/*stworzyc komponent, aby nie duplikować stylowania*/}
                         {pages.map(page => (
                             <Button
+                                onClick={() => setActiveMenu(page.desc)}
                                 component={Link}
                                 to={page.url}
                                 key={page.desc}
                                 sx={{my: 2, color: 'black', display: 'block', fontFamily: "Oswald", fontWeight: "200"}}
                             >
-                                {page.desc}</Button>
+                                {isActive(page.desc) ?
+                                    (<Typography sx={{fontWeight: 400, fontFamily: "Oswald", fontSize: "15px"}}>{page.desc}</Typography>)
+                                    : page.desc}
+                            </Button>
+
                         ))}
                         {!user ?
                             (<Button
@@ -227,7 +239,7 @@ const Navbar = () => {
                             Proszę się zalogować
                         </Typography>
                         <Avatar sx={{marginRight: "10px"}} alt="?">?</Avatar>
-                        </Box>)}
+                    </Box>)}
                 </Toolbar>
             </Container>
         </AppBar>

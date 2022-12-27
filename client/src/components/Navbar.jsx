@@ -39,8 +39,8 @@ const fakeUser = {
 const Navbar = () => {
     const [activeMenu, setActiveMenu] = useState('Strona główna');
     const [anchorElNav, setAnchorElNav] = React.useState(null);
-    // const [user, setUser] = React.useState(fakeUser);
-    const [user, setUser] = React.useState(null);
+    const [user, setUser] = React.useState(fakeUser);
+    // const [user, setUser] = React.useState(null);
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);

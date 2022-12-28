@@ -39,8 +39,8 @@ const fakeUser = {
 const Navbar = () => {
     const [activeMenu, setActiveMenu] = useState('Strona główna');
     const [anchorElNav, setAnchorElNav] = React.useState(null);
-    const [user, setUser] = React.useState(fakeUser);
-    // const [user, setUser] = React.useState(null);
+    // const [user, setUser] = React.useState(fakeUser);
+    const [user, setUser] = React.useState(null);
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
@@ -109,6 +109,7 @@ const Navbar = () => {
                         alignItems: "center",
                         backgroundColor: "#eef1f4",
                         borderRadius: "27px",
+                        transition: "0.3s linear",
                         '&:hover': {
                             color: '#0971f1',
                             backgroundColor: '#fafafa',

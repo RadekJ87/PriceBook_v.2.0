@@ -3,7 +3,7 @@ import { styled } from '@mui/material/styles';
 import Box from "@mui/material/Box";
 
 
-export const WallpaperDiv = styled(Box)(({ image }) => ({
+const CenteredDivWithWallpaper = styled(Box)(({ image }) => ({
     height: "100vh",
     position: "relative",
     width: "100%",
@@ -22,6 +22,18 @@ export const WallpaperDiv = styled(Box)(({ image }) => ({
         opacity: 0.6
     }
 }));
+
+const WallpaperDiv = ({children, image}) => {
+    return (
+        <CenteredDivWithWallpaper image={image}>
+            <Box sx={{position: "relative"}}>
+                {children}
+            </Box>
+        </CenteredDivWithWallpaper>
+    );
+};
+
+export default WallpaperDiv;
 
 
 

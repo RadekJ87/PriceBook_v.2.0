@@ -12,7 +12,8 @@ const CustomizableTableHead = ({columns}) => {
                             key={column.id}
                             align={column.align}
                             sx={{
-                                minWidth: column.minWidth,
+                                display: {xs: column.displayXS, md: column.displayMD},
+                                minWidth: {xs: column.minWidthXS, md: column.minWidthMD},
                                 fontFamily: 'Oswald',
                                 fontSize: '16px',
                                 letterSpacing: '0.5px',

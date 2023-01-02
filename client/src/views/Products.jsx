@@ -14,13 +14,14 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import {OutlinedInput} from "@mui/material";
 
+
 const columns = [
-    {id: 'description', label: 'Opis', minWidth: 170, align: 'center'},
-    {id: 'drawing', label: 'Numer\u00a0rysunku', minWidth: 80, align: 'center'},
-    {id: 'rev', label: 'Rewizja', minWidth: 40, align: 'center'},
-    {id: 'material', label: 'Numer\u00a0materiału\u00a0klienta', minWidth: 150, align: 'center'},
-    {id: 'moq', label: 'MOQ', minWidth: 40, align: 'center'},
-    {id: 'price', label: 'Cena', minWidth: 40, align: 'right', format: (value) => value.toLocaleString('pl')},
+    {id: 'description', label: 'Opis', minWidthXS: 25, minWidthMD: 170, align: 'center'},
+    {id: 'drawing', label: 'Numer\u00a0rysunku', minWidthXS: 20, minWidthMD: 80, align: 'center'},
+    {id: 'rev', label: 'Rewizja', displayXS: "none", displayMD: "table-cell", minWidthXS: 10, minWidthMD: 40, align: 'center'},
+    {id: 'material', label: 'Numer\u00a0materiału\u00a0klienta', displayXS: "none", displayMD: "table-cell", minWidthXS: 20, minWidthMD: 150, align: 'center'},
+    {id: 'moq', label: 'MOQ', minWidthXS: 10, minWidthMD: 40, align: 'center'},
+    {id: 'price', label: 'Cena', minWidthXS: 10, minWidthMD: 40, align: 'right', format: (value) => value.toLocaleString('pl')},
 ];
 
 const createRandomProduct = () => {
@@ -58,7 +59,7 @@ const Products = () => {
     return (
         <WallpaperDiv image={test}>
             <Box sx={{
-                width: "1600px",
+                width: {xs: '380px', md: "1024px", xl: "1600px"},
                 display: 'flex',
                 flexDirection: "column",
                 alignItems: "center",
@@ -95,11 +96,11 @@ const Products = () => {
                                 mr: 2,
                                 flex: 1,
                                 fontFamily: 'Oswald',
-                                fontSize: {xs: "16px", md: "24px"},
+                                fontSize: "24px",
                                 textTransform: "uppercase",
                             }}>Wyszukaj produkt</Typography>
                     </Box>
-                    <OutlinedInput sx={{flex: 2}} placeholder="Podaj numer rysunku"/>
+                    <OutlinedInput sx={{flex: 2, fontSize: {xs: "0.8rem", md: "1rem"}}} placeholder="Podaj numer rysunku"/>
                 </Box>
                 <Paper sx={{width: '100%', overflow: 'hidden'}}>
                     <TableContainer sx={{maxHeight: 640}}>
@@ -110,11 +111,11 @@ const Products = () => {
                                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                     .map((row) => {
                                         return (
-                                            <TableRow hover role="checkbox" tabIndex={-1} key={row.code} onClick={()=> console.log(`Klinknięto product ${row.description} o ID ${row.productID} `)}>
+                                            <TableRow hover role="checkbox" tabIndex={-1} key={row.productID} onClick={()=> console.log(`Klinknięto product ${row.description} o ID ${row.productID} `)}>
                                                 {columns.map((column) => {
                                                     const value = row[column.id];
                                                     return (
-                                                        <TableCell key={column.id} align={column.align}>
+                                                        <TableCell key={column.id} align={column.align} sx={{display: {xs: column.displayXS, md: column.displayMD}}}>
                                                             {column.format && typeof value === 'number'
                                                                 ? column.format(value)
                                                                 : value}

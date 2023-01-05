@@ -5,9 +5,10 @@ import {Product} from "../models/Product.js";
 const productRouter = express.Router();
 
 productRouter
-    .get("/", async (req, res) => {
+    .get("/:drawing?", async (req, res) => {
+        const whereLike = req.params.drawing ?? '';
         try {
-            const products = await Product.find();
+            const products = await Product.find({description: {'$regex': whereLike, '$options': 'i'}});
             res.status(200).json(products)
         } catch (error) {
             res.status(500).json(error);

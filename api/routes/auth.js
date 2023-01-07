@@ -4,6 +4,7 @@ import bcrypt from "bcrypt";
 
 const authRouter = express.Router();
 
+// dziala, jedyne usprawnenie to odpowiednia zwrotka dla admina czy chodzi o nazwe uzytkownika czy email
 authRouter
     .post('/register', async (req, res) => {
         try {
@@ -28,8 +29,9 @@ authRouter
     })
 
     .post('/login', async (req, res) => {
+        const {username, password: pass} = req.body;
         try {
-            const user = await User.findOne({username: req.body.username});
+            const user = await User.findOne({username});
             if (!user) return res.status(400).json('Wrong credentials');
 
             const {password, ...others} = user._doc;
@@ -38,11 +40,9 @@ authRouter
             if (!isPasswordCorrect) return res.status(400).json('Wrong credentials');
 
             return res.status(200).json(others);
-
         } catch (error) {
             res.status(500).json(error)
         }
-
     })
 
 export default authRouter;

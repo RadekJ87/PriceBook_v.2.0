@@ -1,30 +1,42 @@
-import React, {useState} from 'react';
-import {Card, CardActions, CardContent, CardHeader, Stack, TextField} from "@mui/material";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
+import React, {useContext, useState} from 'react';
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import WallpaperDiv from "../components/WallpaperDiv";
+import {Card, CardContent, Stack, TextField} from "@mui/material";
+import {LoadingButton} from "@mui/lab";
+import {Box, Typography} from "@mui/material";
+import {AuthContext} from "../context/authContext";
 import Laser from '../images/backgroundLogin.avif'
-import Button from "@mui/material/Button";
 
 const Login = () => {
-    const [creditentials, setCreditentials] = useState({
+    const [credentials, setCredentials] = useState({
         username: '',
         password: '',
     });
+    const {user, isLogInBeingProcessed, error, dispatch} = useContext(AuthContext);
+    const navigate = useNavigate();
 
     const handleInputs = event => {
-        setCreditentials({
-            ...creditentials,
+        setCredentials({
+            ...credentials,
             [event.target.name]: event.target.value
         });
     }
 
-    const handleLogin = (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault();
-
-        console.log(creditentials);
+        dispatch({type: "LOGIN_START"});
+        try {
+            const res = await axios.post('/auth/login', credentials);
+            dispatch({type: "LOGIN_SUCCESS", payload: res.data});
+            navigate('/');
+        } catch (err) {
+            dispatch({type: "LOGIN_FAILURE"});
+            throw new Error(err);
+        }
     }
 
+    // console.log(user);
 
     return (
         <WallpaperDiv image={Laser}>
@@ -62,8 +74,18 @@ const Login = () => {
                             <TextField required name="password" label="Hasło" variant="standard" type="password"
                                        onChange={handleInputs}/>
                         </Stack>
-                        <Button variant={"contained"} color={"primary"} size={"large"} type="submit">Zaloguj</Button>
+                        <LoadingButton
+                            loading={isLogInBeingProcessed}
+                            loadingIndicator="Uwierzytelnianie..."
+                            variant="contained"
+                            size="large"
+                            type="submit"
+                        >Zaloguj</LoadingButton>
                     </Box>
+                    {error && (<Typography
+                        variant="caption"
+                        sx={{color: "red", textAlign: "center"}}
+                        >Podany login lub hasło są nieprawidłowe</Typography>)}
                 </CardContent>
             </Card>
         </WallpaperDiv>

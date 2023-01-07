@@ -3,6 +3,7 @@ import * as dotenv from 'dotenv'
 import mongoose from 'mongoose';
 import authRouter from "./routes/auth.js";
 import productRouter from "./routes/products.js";
+import usersRouter from "./routes/users.js";
 
 const app = express();
 dotenv.config();
@@ -19,7 +20,8 @@ app
         res.send('Welcome to Pricebook app!');
     })
     .use('/api/auth', authRouter)
-    .use('/api/products', productRouter);
+    .use('/api/products', productRouter)
+    .use('/api/users', usersRouter);
 
 app.listen(4000, 'localhost', () => {
     console.log('Listening on http://localhost:4000');

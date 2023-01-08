@@ -42,12 +42,13 @@ authRouter
             if (!isPasswordCorrect) return res.status(400).json('Wrong credentials');
 
             const token = jwt.sign({userID: user._doc._id.toString()}, process.env.ACCESS_TOKEN, {
-                expiresIn: 60 * 60 * 3
+                expiresIn: 60 * 60 * 7
             });
 
             return res.status(200).json({
                 "username": user._doc.username,
-                "profilePic": user._doc.profilePic
+                "profilePic": user._doc.profilePic,
+                token,
             });
         } catch (error) {
             res.status(500).json(error)

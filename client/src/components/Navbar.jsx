@@ -10,7 +10,8 @@ import Button from '@mui/material/Button';
 import Brand from '../images/logo_jasne.png';
 import {IconButton, Menu, MenuItem} from "@mui/material";
 import MenuIcon from '@mui/icons-material/Menu';
-import {useState} from "react";
+import {useContext, useState} from "react";
+import {AuthContext} from "../context/authContext";
 
 
 // do opcji menu poza auth
@@ -63,7 +64,8 @@ const Navbar = () => {
     const [anchorElNav, setAnchorElNav] = React.useState(null);
 
     // different user types for test
-    const [user, setUser] = React.useState(null);
+    const {user} = useContext(AuthContext);
+    // const [user, setUser] = React.useState(null);
     // const [user, setUser] = React.useState(fakeNormalUser);
     // const [user, setUser] = React.useState(fakeAdmin);
 

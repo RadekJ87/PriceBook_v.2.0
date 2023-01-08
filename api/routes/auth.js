@@ -1,19 +1,22 @@
 import express from "express";
 import {User} from "../models/User.js";
 import bcrypt from "bcrypt";
+import jwt from 'jsonwebtoken';
+import * as dotenv from "dotenv";
+
+dotenv.config();
 
 const authRouter = express.Router();
 
-// dziala, jedyne usprawnenie to odpowiednia zwrotka dla admina czy chodzi o nazwe uzytkownika czy email
 authRouter
     .post('/register', async (req, res) => {
         try {
             const salt = bcrypt.genSaltSync(10);
-            const hash = bcrypt.hashSync(req.body.password, salt);
+            const hash = bcrypt.hashSync(req.body.password.trim(), salt);
 
             const user = new User({
-                username: req.body.username,
-                email: req.body.email,
+                username: req.body.username.trim(),
+                email: req.body.email.trim(),
                 password: String(hash),
             })
 
@@ -21,25 +24,31 @@ authRouter
             res.status(200).json(newUser);
 
         } catch (error) {
-            // moze zwracać
-            // const err = error.keyValue?.username ?? error.keyValue?.email;
-            // console.log(err);
-            res.status(500).json(error)
+            // rejestrować będzie tylko admin, dla przyśpieczenia zwróć co się powtarza
+            const err = error.keyValue?.username ?? error.keyValue?.email;
+            res.status(500).json('Powtarza się ' + err)
         }
     })
 
     .post('/login', async (req, res) => {
-        const {username, password: pass} = req.body;
         try {
-            const user = await User.findOne({username});
+            const user = await User.findOne({username: req.body.username});
+
             if (!user) return res.status(400).json('Wrong credentials');
 
-            const {password, ...others} = user._doc;
+            const {password, username, profilePic} = user._doc;
 
             const isPasswordCorrect = await bcrypt.compare(req.body.password, password);
             if (!isPasswordCorrect) return res.status(400).json('Wrong credentials');
 
-            return res.status(200).json(others);
+            const token = jwt.sign({userID: user._doc._id.toString()}, process.env.ACCESS_TOKEN, {
+                expiresIn: 60 * 60 * 3
+            });
+
+            return res.status(200).json({
+                "username": user._doc.username,
+                "profilePic": user._doc.profilePic
+            });
         } catch (error) {
             res.status(500).json(error)
         }

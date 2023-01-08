@@ -36,19 +36,18 @@ const pages = [
 const fakeNormalUser = {
     username: 'John User',
     img: "https://randomuser.me/api/portraits/thumb/men/75.jpg",
-    role: 'user',
+    admin: false,
 }
 
 const fakeAdmin = {
     username: 'John Admin',
     img: "https://randomuser.me/api/portraits/thumb/men/73.jpg",
-    role: 'admin',
+    admin: true,
 }
 
 function createNavbar(user, arrayCategories) {
-    // let filtered = [];
     if (user) {
-        if (user.role === 'admin') {
+        if (user.admin) {
             return arrayCategories
         } else {
             return arrayCategories.filter(category => category.access !== 'adminOnly');

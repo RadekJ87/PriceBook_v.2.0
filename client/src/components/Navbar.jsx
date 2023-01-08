@@ -17,30 +17,57 @@ import {useState} from "react";
 const pages = [
     {
         desc: 'Strona główna',
-        url: "/"
+        url: "/",
+        access: 'basic',
     },
     {
         desc: 'Produkty',
-        url: "/products"
+        url: "/products",
+        access: 'basicUser',
     },
     {
         desc: 'Panel administratora',
-        url: "/options"
+        url: "/options",
+        access: 'adminOnly',
     },
 ];
 
 // dane testowe do user
-const fakeUser = {
-    username: 'John Doe',
+const fakeNormalUser = {
+    username: 'John User',
     img: "https://randomuser.me/api/portraits/thumb/men/75.jpg",
+    admin: false,
 }
+
+const fakeAdmin = {
+    username: 'John Admin',
+    img: "https://randomuser.me/api/portraits/thumb/men/73.jpg",
+    admin: true,
+}
+
+function createNavbar(user, arrayCategories) {
+    if (user) {
+        if (user.admin) {
+            return arrayCategories
+        } else {
+            return arrayCategories.filter(category => category.access !== 'adminOnly');
+        }
+    }
+    return arrayCategories.filter(category => category.access === 'basic');
+}
+
 
 
 const Navbar = () => {
     const [activeMenu, setActiveMenu] = useState('Strona główna');
     const [anchorElNav, setAnchorElNav] = React.useState(null);
-    // const [user, setUser] = React.useState(fakeUser);
+
+    // different user types for test
     const [user, setUser] = React.useState(null);
+    // const [user, setUser] = React.useState(fakeNormalUser);
+    // const [user, setUser] = React.useState(fakeAdmin);
+
+    // console.log('navbar', createNavbar(user, pages));
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
@@ -72,7 +99,7 @@ const Navbar = () => {
                         gap: "20px",
                     }}>
                         {/*stworzyc komponent, aby nie duplikować stylowania*/}
-                        {pages.map(page => (
+                        {createNavbar(user, pages).map(page => (
                             <Button
                                 onClick={() => setActiveMenu(page.desc)}
                                 component={Link}
@@ -81,7 +108,11 @@ const Navbar = () => {
                                 sx={{my: 2, color: 'black', display: 'block', fontFamily: "Oswald", fontWeight: "200"}}
                             >
                                 {isActive(page.desc) ?
-                                    (<Typography sx={{fontWeight: 400, fontFamily: "Oswald", fontSize: "15px"}}>{page.desc}</Typography>)
+                                    (<Typography sx={{
+                                        fontWeight: 400,
+                                        fontFamily: "Oswald",
+                                        fontSize: "15px"
+                                    }}>{page.desc}</Typography>)
                                     : page.desc}
                             </Button>
 
@@ -164,7 +195,7 @@ const Navbar = () => {
                                 color: "black"
                             }}
                         >
-                            {pages.map((page) => (
+                            {createNavbar(user, pages).map((page) => (
                                 <MenuItem
                                     component={Link}
                                     to={page.url}

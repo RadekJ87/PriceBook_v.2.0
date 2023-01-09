@@ -111,7 +111,7 @@ const Navbar = () => {
                 dispatch(logout());
                 setIsLoggingOut(false);
                 navigate('/', { replace: true});
-            }, 3000);
+            }, 2000);
             // dispatch(logout());
         } catch (e){
             console.log(e);

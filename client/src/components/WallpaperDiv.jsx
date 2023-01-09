@@ -28,7 +28,7 @@ const WallpaperDiv = ({children, image, position = "relative"}) => {
         <CenteredDivWithWallpaper image={image}>
             <Box sx={{
                 position: {position},
-                top: position === "absolute" ? "20%" : "",
+                top: position === "absolute" ? "10%" : "",
                 left: position === "absolute" ? "50%" : "",
                 transform: position === "absolute" ? "translateX(-50%)" : ""
             }}>

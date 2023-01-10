@@ -7,7 +7,7 @@ productRouter
     .get("/:drawing?", async (req, res) => {
         const whereLike = req.params.drawing ?? '';
         try {
-            const products = await Product.find({description: {'$regex': whereLike, '$options': 'i'}});
+            const products = await Product.find({drawingNumber: {'$regex': whereLike, '$options': 'i'}});
             res.status(200).json(products)
         } catch (error) {
             res.status(500).json(error);

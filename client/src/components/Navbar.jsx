@@ -1,5 +1,6 @@
 import * as React from 'react';
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
+import CircularProgress from '@mui/material/CircularProgress';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -10,8 +11,10 @@ import Button from '@mui/material/Button';
 import Brand from '../images/logo_jasne.png';
 import {IconButton, Menu, MenuItem} from "@mui/material";
 import MenuIcon from '@mui/icons-material/Menu';
-import {useContext, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import {AuthContext} from "../context/authContext";
+import jwt_decode from "jwt-decode";
+import {logout} from "../actions/authActions";
 
 
 // do opcji menu poza auth
@@ -46,9 +49,20 @@ const fakeAdmin = {
     admin: true,
 }
 
+
+function isAdmin(user) {
+    if (!user) {
+        return null;
+    } else {
+        const {admin} = jwt_decode(user.token);
+        return admin;
+    }
+}
+
 function createNavbar(user, arrayCategories) {
-    if (user) {
-        if (user.admin) {
+    if(user) {
+        const admin = isAdmin(user);
+        if (admin) {
             return arrayCategories
         } else {
             return arrayCategories.filter(category => category.access !== 'adminOnly');
@@ -58,18 +72,22 @@ function createNavbar(user, arrayCategories) {
 }
 
 
-
 const Navbar = () => {
+    const navigate = useNavigate();
+    const {user, dispatch} = useContext(AuthContext);
+
+    // @TODO - do zrobienia reducer
     const [activeMenu, setActiveMenu] = useState('Strona główna');
-    const [anchorElNav, setAnchorElNav] = React.useState(null);
+    const [anchorElNav, setAnchorElNav] = useState(null);
+    const [isLoggingOut, setIsLoggingOut] = useState(false);
+    const [navbar, setNavbar] = useState(createNavbar(user, pages));
 
-    // different user types for test
-    const {user} = useContext(AuthContext);
-    // const [user, setUser] = React.useState(null);
-    // const [user, setUser] = React.useState(fakeNormalUser);
-    // const [user, setUser] = React.useState(fakeAdmin);
 
-    // console.log('navbar', createNavbar(user, pages));
+    useEffect(()=>{
+        setNavbar(createNavbar(user, pages));
+        setActiveMenu('Strona główna');
+    }, [user]);
+
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
@@ -81,6 +99,23 @@ const Navbar = () => {
 
     const isActive = descritption => {
         return descritption === activeMenu;
+    }
+
+    const handleLogout = () => {
+        if(anchorElNav){
+            handleCloseNavMenu();
+        }
+        try{
+            setIsLoggingOut(true);
+            setTimeout(()=> {
+                dispatch(logout());
+                setIsLoggingOut(false);
+                navigate('/', { replace: true});
+            }, 2000);
+            // dispatch(logout());
+        } catch (e){
+            console.log(e);
+        }
     }
 
 
@@ -101,7 +136,7 @@ const Navbar = () => {
                         gap: "20px",
                     }}>
                         {/*stworzyc komponent, aby nie duplikować stylowania*/}
-                        {createNavbar(user, pages).map(page => (
+                        {navbar.map(page => (
                             <Button
                                 onClick={() => setActiveMenu(page.desc)}
                                 component={Link}
@@ -129,10 +164,9 @@ const Navbar = () => {
                             </Button>)
                             : (<Button
                                 component={Link}
-                                to={`/logout`}
-                                sx={{my: 2, color: 'black', display: 'block', fontFamily: "Oswald", fontWeight: "200"}}
-                            >
-                                Wyloguj
+                                onClick={handleLogout}
+                                sx={{my: 2, display: 'flex', justifyContent: "center", color: 'black', fontFamily: "Oswald", fontWeight: "200"}}
+                            >Wyloguj{isLoggingOut && <CircularProgress sx={{ml: 1}} size={'15px'} />}
                             </Button>)}
                     </Box>
                     {user ? (<Box sx={{
@@ -197,7 +231,7 @@ const Navbar = () => {
                                 color: "black"
                             }}
                         >
-                            {createNavbar(user, pages).map((page) => (
+                            {navbar.map((page) => (
                                 <MenuItem
                                     component={Link}
                                     to={page.url}
@@ -209,8 +243,7 @@ const Navbar = () => {
                             {user ?
                                 (<MenuItem
                                     component={Link}
-                                    to={'/logout'}
-                                    onClick={handleCloseNavMenu}>
+                                    onClick={handleLogout}>
                                     <Typography textAlign="center">Wyloguj</Typography>
                                 </MenuItem>)
                                 :

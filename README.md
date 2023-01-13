@@ -9,11 +9,12 @@ Co nowego? <br>
  - autoryzacja i uwierzytelnianie - JWT,
  - zmiana DB z relacyjnej bazy MySQL na bazę nierelacyjną MongoDB,
  <br>
- Z pewnościa na tym nie koniec, bo pomysłów przybywa👍🏼
+ Z pewnościa na tym nie koniec, bo pomysłów przybywa 👍🏼
  
 
-Jeżeli chcesz sprawdzić jak idą pracę, to zapraszam Cię pod adres👉🏻
-<url>https://pricebooktwo.onrender.com/</rul>
-###Konta: 
+Jeżeli chcesz sprawdzić jak idą pracę, to zapraszam Cię pod adres 👉🏻
+<url>https://pricebooktwo.onrender.com/</url>
+<br>
+### Konta: 
    - admin -> username: admin pass: admin123,
    - user  -> username: radek pass: radek123,

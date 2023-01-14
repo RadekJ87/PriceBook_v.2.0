@@ -37,28 +37,33 @@ const router = createBrowserRouter([
                 element: <Home/>,
             },
             {
-                path: "/login",
+                path: "login",
                 element: <Login/>,
             },
             {
-                path: "/products",
+                path: "products",
                 element: <Products/>,
             },
             {
-                path: "/options",
-                element: <Options/>,
-            },
-            {
-                path: "/options/manage-users",
-                element: <OptionsUsers/>,
-            },
-            {
-                path: "/options/manage-prices",
-                element: <OptionsPrices/>,
-            },
-            {
-                path: "/options/manage-products",
-                element: <OptionsProducts/>,
+                path: "options",
+                children: [
+                    {
+                        index: true,
+                        element: <Options/>,
+                    },
+                    {
+                        path: "manage-users",
+                        element: <OptionsUsers/>,
+                    },
+                    {
+                        path: "manage-products",
+                        element: <OptionsProducts/>,
+                    },
+                    {
+                        path: "manage-prices",
+                        element: <OptionsPrices/>,
+                    },
+                ]
             },
         ]
     },

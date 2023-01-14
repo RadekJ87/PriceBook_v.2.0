@@ -1,5 +1,4 @@
 import React from 'react';
-import Box from '@mui/material/Box';
 import Logo from '../images/jasne.png';
 import Cast from '../images/backgroundHome.avif';
 

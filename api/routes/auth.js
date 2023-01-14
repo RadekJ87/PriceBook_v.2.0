@@ -41,7 +41,7 @@ authRouter
             const isPasswordCorrect = await bcrypt.compare(req.body.password, password);
             if (!isPasswordCorrect) return res.status(400).json('Wrong credentials');
 
-            const token = jwt.sign({userID: user._doc._id.toString()}, process.env.ACCESS_TOKEN, {
+            const token = jwt.sign({userID: user._doc._id.toString(), admin: user._doc.admin}, process.env.ACCESS_TOKEN, {
                 expiresIn: 60 * 60 * 7
             });
 

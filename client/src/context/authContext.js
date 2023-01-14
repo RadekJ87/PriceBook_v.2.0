@@ -1,9 +1,8 @@
-import {createContext, useEffect, useReducer, useState} from "react";
-import axios from "axios";
+import {createContext, useEffect, useReducer} from "react";
 import authReducer from "../reducers/authReducer";
 
 const initialState = {
-    user: null,
+    user: JSON.parse(localStorage.getItem('user')) || null,
     isLogInBeingProcessed: false,
     error: false,
 }

@@ -2,6 +2,13 @@ import mongoose from 'mongoose';
 
 const {Schema} = mongoose;
 
+function getCosts(value) {
+    if (typeof value !== 'undefined') {
+        return parseFloat(value.toString());
+    }
+    return value;
+};
+
 const productSchema = new Schema({
     description: {
         type: String,
@@ -24,13 +31,16 @@ const productSchema = new Schema({
         required: true,
     },
     price: {
-        type: Number,
+        type: Schema.Types.Decimal128,
+        // type: Number,
         required: true,
+        get: getCosts,
     },
     offerNumber: {
         type: String,
         default: '',
     },
-}, {timestamps: true});
+    id: false
+}, {toJSON: {getters: true}, timestamps: true});
 
 export const Product = mongoose.model('Product', productSchema);

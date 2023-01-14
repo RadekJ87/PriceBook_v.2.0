@@ -6,6 +6,8 @@ const authReducer = (state, action) => {
             return { user: action.payload, isLogInBeingProcessed: false, error: false};
         case "LOGIN_FAILURE":
            return { user: null, isLogInBeingProcessed: false, error: true};
+        case "LOGOUT":
+            return { user: null, isLogInBeingProcessed: false, error: false};
         default:
             return state;
     }

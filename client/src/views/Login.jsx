@@ -7,13 +7,14 @@ import {LoadingButton} from "@mui/lab";
 import {Box, Typography} from "@mui/material";
 import {AuthContext} from "../context/authContext";
 import Laser from '../images/backgroundLogin.avif'
+import {loginFailure, loginSuccess, startLoggingUser} from "../actions/authActions";
 
 const Login = () => {
     const [credentials, setCredentials] = useState({
         username: '',
         password: '',
     });
-    const {user, isLogInBeingProcessed, error, dispatch} = useContext(AuthContext);
+    const {isLogInBeingProcessed, error, dispatch} = useContext(AuthContext);
     const navigate = useNavigate();
 
     const handleInputs = event => {
@@ -25,18 +26,16 @@ const Login = () => {
 
     const handleLogin = async (e) => {
         e.preventDefault();
-        dispatch({type: "LOGIN_START"});
+        dispatch(startLoggingUser());
         try {
             const res = await axios.post('/auth/login', credentials);
-            dispatch({type: "LOGIN_SUCCESS", payload: res.data});
+            dispatch(loginSuccess(res.data));
             navigate('/');
         } catch (err) {
-            dispatch({type: "LOGIN_FAILURE"});
+            dispatch(loginFailure());
             throw new Error(err);
         }
     }
-
-    // console.log(user);
 
     return (
         <WallpaperDiv image={Laser}>

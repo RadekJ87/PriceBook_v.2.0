@@ -16,6 +16,10 @@ import {OutlinedInput} from "@mui/material";
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import {faker} from "@faker-js/faker";
 import LoadingModal from "../components/LoadingModal";
+import ProductsSearchBar from "../components/ProductsSearchBar";
+import ProductsTable from "../components/ProductsTable";
+import ProductsSearchBarWithButton from "../components/ProductsSearchBarWithButton";
+import RefTest from "../components/RefTest";
 
 
 // for mockup
@@ -82,35 +86,31 @@ const columns = [
 
 const Products = () => {
     // @TODO reducer, rozważyć użycie LoadingModal
-    const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(10);
-    // const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const [products, setProducts] = useState([]);
+    // const [products, setProducts] = useState(null);
     const [search, setSearch] = useState("");
 
 
     useEffect(() => {
-        // setIsLoading(true);
+        setIsLoading(true);
         const fetchProducts = async () => {
             const res = await axios.get(`/products/${search}`);
-            setProducts(res.data)
-            // setIsLoading(false);
+            setProducts(res.data);
+            setIsLoading(false);
         }
         fetchProducts().catch(console.error);
+
+        return () => {}
     }, [search])
 
 
-    const handleChangePage = (event, newPage) => {
-        setPage(newPage);
-    };
+    // const handleInputChange = (event) => {
+    //     setSearch(event.target.value);
+    // }
 
-    const handleChangeRowsPerPage = (event) => {
-        setRowsPerPage(+event.target.value);
-        setPage(0);
-    };
-
-    const handleInputChange = (event) => {
-        setSearch(event.target.value);
+    const handleSearch = async (search) => {
+        setSearch(search);
     }
 
     return (
@@ -122,102 +122,10 @@ const Products = () => {
                 alignItems: "center",
                 justifyContent: "space-around",
             }}>
-                <Box className="search" sx={{
-                    display: "flex",
-                    flexDirection: "row",
-                    padding: 1,
-                    minWidth: "40%",
-                    height: "40px",
-                    marginBottom: "25px",
-                    justifyContent: "center",
-                    backgroundColor: "#fafafa",
-                    border: "1px solid #cccccc",
-                    boxShadow: "0px 5px 10px 0px rgba(255,255,255,0.7)",
-                    transition: "all ease 0.2s",
-                    borderRadius: "5px",
-                    '&:hover': {
-                        transform: 'translateY(-1px)',
-                        boxShadow: '0px 10px 20px 2px rgba(255,255,255,0.7)'
-                    }
-                }}>
-                    <Box sx={{
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "center",
-                    }}>
-                        <Typography
-                            variant="h6"
-                            component="h6"
-                            sx={{
-                                mr: 2,
-                                flex: 1,
-                                fontFamily: 'Oswald',
-                                fontSize: "24px",
-                                textTransform: "uppercase",
-                            }}>Wyszukaj produkt</Typography>
-                    </Box>
-                    <OutlinedInput onChange={handleInputChange} sx={{flex: 2, fontSize: {xs: "0.8rem", md: "1rem"}}}
-                                   placeholder="Podaj numer rysunku"/>
-                </Box>
-                {/*<LoadingModal isLoading={isLoading}/>*/}
-                {!!products.length ? (<Paper sx={{width: '100%', overflow: 'hidden'}}>
-                        <TableContainer sx={{maxHeight: 640}}>
-                            <Table stickyHeader aria-label="sticky table">
-                                <CustomizableTableHead columns={columns}/>
-                                <TableBody>
-                                    {products
-                                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                        .map((row) => {
-                                            const {_id: productID, description} = row;
-                                            return (
-                                                <TableRow hover role="checkbox" tabIndex={-1} key={productID}
-                                                          onClick={() => console.log(`Klinknięto product ${description} o ID ${productID} `)}>
-                                                    {columns.map((column) => {
-                                                        const value = row[column.id];
-                                                        return (
-                                                            <TableCell key={column.id} align={column.align} sx={{
-                                                                display: {
-                                                                    xs: column.displayXS,
-                                                                    md: column.displayMD
-                                                                }
-                                                            }}>
-                                                                {column.format && typeof value === 'number'
-                                                                    ? column.format(value)
-                                                                    : value}
-                                                            </TableCell>
-                                                        );
-                                                    })}
-                                                </TableRow>
-                                            );
-                                        })}
-                                </TableBody>
-                            </Table>
-                        </TableContainer>
-                        <TablePagination
-                            rowsPerPageOptions={[10, 25, 50]}
-                            labelRowsPerPage='Produktów na stronę:'
-                            component="div"
-                            count={products.length}
-                            rowsPerPage={rowsPerPage}
-                            page={page}
-                            onPageChange={handleChangePage}
-                            onRowsPerPageChange={handleChangeRowsPerPage}
-                            labelDisplayedRows={(from = page) => (`${from.from}-${from.to === -1 ? from.count : from.to} z ${from.count}`)}
-                        />
-                    </Paper>)
-                    :
-                    (<Paper sx={{
-                        fontFamily: 'Oswald',
-                        width: '100%',
-                        height: "100px",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        gap: 1
-                    }}>
-                        <ErrorOutlineIcon/>
-                        <Typography variant="h6">Nie znaleziono w bazie produktu o numerze rysunku {search}</Typography>
-                    </Paper>)}
+                {/*<ProductsSearchBar onInputChange={handleInputChange}/>*/}
+                <ProductsSearchBarWithButton onSearch={handleSearch}/>
+                <LoadingModal isLoading={isLoading}/>
+                {isLoading ? null : <ProductsTable products={products} columns={columns} search={search}/>}
             </Box>
         </WallpaperDiv>
     );

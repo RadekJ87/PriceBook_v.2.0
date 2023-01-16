@@ -12,6 +12,10 @@ import Products from "./views/Products";
 import Options from "./views/Options";
 import Error from "./views/Error";
 import {Box} from "@mui/material";
+import OptionsUsers from "./views/OptionsUsers";
+import OptionsPrices from "./views/OptionsPrices";
+import OptionsProducts from "./views/OptionProducts";
+import TestView from "./views/TestView";
 
 const Layout = () => {
     return (
@@ -34,18 +38,47 @@ const router = createBrowserRouter([
                 element: <Home/>,
             },
             {
-                path: "/login",
+                path: "login",
                 element: <Login/>,
             },
             {
-                path: "/products",
+                path: "products",
                 element: <Products/>,
             },
             {
-                path: "/options",
-                element: <Options/>,
+                path: "options",
+                children: [
+                    {
+                        index: true,
+                        element: <Options/>,
+                    },
+                    // {
+                    //     path: "manage-users",
+                    //     element: <OptionsUsers/>,
+                    // },
+                    {
+                        path: "manage-users",
+                        children: [
+                            {
+                                index: true,
+                                element: <OptionsUsers/>,
+                            },
+                            {
+                                path: ':id',
+                                element: <TestView/>,
+                            },
+                        ]
+                    },
+                    {
+                        path: "manage-products",
+                        element: <OptionsProducts/>,
+                    },
+                    {
+                        path: "manage-prices",
+                        element: <OptionsPrices/>,
+                    },
+                ]
             },
-
         ]
     },
 ]);

@@ -73,11 +73,11 @@ const UsersList = styled(Box)(({theme}) => ({
         minHeight: '200px',
         margin: 'auto 42px',
     },
-    [theme.breakpoints.up('sm')]: {
+    [theme.breakpoints.up('md')]: {
         minHeight: '400px',
         margin: 'auto 68px',
     },
-    [theme.breakpoints.up('md')]: {
+    [theme.breakpoints.up('xl')]: {
         minHeight: '600px',
         margin: 'auto 10px',
     },

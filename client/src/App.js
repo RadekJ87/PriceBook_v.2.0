@@ -15,6 +15,7 @@ import {Box} from "@mui/material";
 import OptionsUsers from "./views/OptionsUsers";
 import OptionsPrices from "./views/OptionsPrices";
 import OptionsProducts from "./views/OptionProducts";
+import TestView from "./views/TestView";
 
 const Layout = () => {
     return (
@@ -51,9 +52,22 @@ const router = createBrowserRouter([
                         index: true,
                         element: <Options/>,
                     },
+                    // {
+                    //     path: "manage-users",
+                    //     element: <OptionsUsers/>,
+                    // },
                     {
                         path: "manage-users",
-                        element: <OptionsUsers/>,
+                        children: [
+                            {
+                                index: true,
+                                element: <OptionsUsers/>,
+                            },
+                            {
+                                path: ':id',
+                                element: <TestView/>,
+                            },
+                        ]
                     },
                     {
                         path: "manage-products",

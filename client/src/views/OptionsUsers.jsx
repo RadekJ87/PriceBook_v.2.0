@@ -1,21 +1,10 @@
 import React from "react";
-import Box from "@mui/material/Box";
-import WallpaperDiv from "../components/WallpaperDiv";
-import SingleAdminOption from "../components/SingleAdminOption";
-import Lathe from "../images/backgroundAdmin.avif";
-import {faMoneyBillTrendUp} from "@fortawesome/free-solid-svg-icons";
-import {Divider, IconButton, Popover} from "@mui/material";
-import AppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import Paper from "@mui/material/Paper";
-import MenuIcon from '@mui/icons-material/Menu';
-import Avatar from "@mui/material/Avatar";
-import {Link} from "react-router-dom";
-import Button from "@mui/material/Button";
+import {Box, Toolbar, Typography, Button} from "@mui/material";
+import {styled} from "@mui/material/styles";
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import SingleUserPaper from "../components/SingleUserPaper";
-import {styled} from "@mui/material/styles";
+import WallpaperDiv from "../components/WallpaperDiv";
+import Lathe from "../images/backgroundAdmin.avif";
 
 const fakeUsers = [
     {

@@ -1,25 +1,13 @@
-import axios from "axios";
 import React, {useEffect, useState} from 'react';
-import WallpaperDiv from '../components/WallpaperDiv';
-import test from '../images/backgroundLogin.avif';
-import Paper from '@mui/material/Paper';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TablePagination from '@mui/material/TablePagination';
-import TableRow from '@mui/material/TableRow';
-import CustomizableTableHead from "../components/CustomizableTableHead";
+import axios from "axios";
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import {OutlinedInput} from "@mui/material";
-import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
-import {faker} from "@faker-js/faker";
 import LoadingModal from "../components/LoadingModal";
-import ProductsSearchBar from "../components/ProductsSearchBar";
 import ProductsTable from "../components/ProductsTable";
 import ProductsSearchBarWithButton from "../components/ProductsSearchBarWithButton";
-import RefTest from "../components/RefTest";
+import WallpaperDiv from '../components/WallpaperDiv';
+import test from '../images/backgroundLogin.avif';
+import ProductsSearchBar from "../components/ProductsSearchBar";
+
 
 
 // for mockup

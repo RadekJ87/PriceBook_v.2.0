@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 import {Box, Toolbar, Typography, Button} from "@mui/material";
 import {styled} from "@mui/material/styles";
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import NotInterestedIcon from '@mui/icons-material/NotInterested';
 import SingleUserPaper from "../components/SingleUserPaper";
 import WallpaperDiv from "../components/WallpaperDiv";
 import Lathe from "../images/backgroundAdmin.avif";
@@ -53,7 +54,7 @@ const fakeUsers = [
 ]
 
 // mozna by zrobić refactor do osobnego komponentu, ale czy jest sens jak to jednorazowe wykorzystanie?
-const UsersList = styled(Box)(({theme}) => ({
+const MainDiv = styled(Box)(({theme}) => ({
     display: 'inline-flex',
     flexWrap: 'wrap',
     flexDirection: 'row',
@@ -73,9 +74,30 @@ const UsersList = styled(Box)(({theme}) => ({
     },
 }));
 
+const MainContainer = styled(Box)(({theme}) => ({
+    borderRadius: "15px",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "flex-start",
+    gap: "24px",
+    padding: "8px",
+    backgroundColor: "#fafafa",
+    [theme.breakpoints.up('xs')]: {
+        width: "380px",
+    },
+    [theme.breakpoints.up('md')]: {
+        width: "1024px",
+    },
+    [theme.breakpoints.up('xl')]: {
+        width: "1500px",
+    },
+}));
+
 const OptionsUsers = () => {
     const [users, setUsers] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    // const [isCreated, setIsCreated] = useState(false);
+    const [isCreated, setIsCreated] = useState(true);
 
     useEffect(() => {
         setIsLoading(true);
@@ -86,24 +108,18 @@ const OptionsUsers = () => {
         }
         fetchUsers().catch(console.error);
 
-        return () => {}
-    },[]);
+        return () => {
+        }
+    }, []);
 
-    console.log(users);
+
+    const toggle = () => {
+        setIsCreated(!isCreated);
+    }
+
     return (
         <WallpaperDiv image={Lathe}>
-            <Box
-                sx={{
-                    width: {xs: "380px", md: "1024px", xl: "1500px"},
-                    borderRadius: "15px",
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "flex-start",
-                    gap: 3,
-                    p: 1,
-                    backgroundColor: "#fafafa"
-                }}
-            >
+            <MainContainer>
                 <Box>
                     <Toolbar sx={{display: "flex", justifyContent: "space-between"}}>
                         <Typography
@@ -117,19 +133,22 @@ const OptionsUsers = () => {
                             }}>
                             Użytkownicy
                         </Typography>
-                        <Button variant="outlined" startIcon={<PersonAddIcon/>} onClick={() => {
-                            console.log("button clicked")
-                        }}>
-                            Dodaj użytkownika
+                        <Button variant="outlined" startIcon={isCreated ? <NotInterestedIcon/> : <PersonAddIcon/>} onClick={toggle}>
+                            {isCreated ? "Anuluj dodawanie" : "Dodaj użytkownika"}
                         </Button>
                     </Toolbar>
                 </Box>
-                <UsersList>
-                    {users.map(user => (<SingleUserPaper key={user._id} user={user} onClick={() => {
-                        console.log("button clicked")
-                    }}/>))}
-                </UsersList>
-            </Box>
+                {isCreated ?
+                    (<MainDiv>
+                        // do osobnego komponentu UserCreator
+                        tworzenie nowego usera
+                    </MainDiv>)
+                    :
+                    (<MainDiv>
+                        {users.map(user => (<SingleUserPaper key={user._id} user={user}/>))}
+                    </MainDiv>)
+                }
+            </MainContainer>
         </WallpaperDiv>
     );
 };

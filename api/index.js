@@ -3,7 +3,7 @@ import * as dotenv from 'dotenv'
 import mongoose from 'mongoose';
 import authRouter from "./routes/auth.js";
 import productRouter from "./routes/products.js";
-import usersRouter from "./routes/users.js";
+import adminRouter from "./routes/admin.js";
 
 const app = express();
 dotenv.config();
@@ -21,7 +21,8 @@ app
     })
     .use('/api/auth', authRouter)
     .use('/api/products', productRouter)
-    .use('/api/users', usersRouter);
+    // .use('/api/users', usersRouter);
+    .use('/api/options', adminRouter);
 
 app.listen(4000, 'localhost', () => {
     console.log('Listening on http://localhost:4000');

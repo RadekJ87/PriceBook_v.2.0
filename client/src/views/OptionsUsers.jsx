@@ -1,10 +1,11 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {Box, Toolbar, Typography, Button} from "@mui/material";
 import {styled} from "@mui/material/styles";
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import SingleUserPaper from "../components/SingleUserPaper";
 import WallpaperDiv from "../components/WallpaperDiv";
 import Lathe from "../images/backgroundAdmin.avif";
+import axios from "axios";
 
 const fakeUsers = [
     {
@@ -73,6 +74,22 @@ const UsersList = styled(Box)(({theme}) => ({
 }));
 
 const OptionsUsers = () => {
+    const [users, setUsers] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+
+    useEffect(() => {
+        setIsLoading(true);
+        const fetchUsers = async () => {
+            const res = await axios.get(`/options/manage-users/`);
+            setUsers(res.data);
+            setIsLoading(false);
+        }
+        fetchUsers().catch(console.error);
+
+        return () => {}
+    },[]);
+
+    console.log(users);
     return (
         <WallpaperDiv image={Lathe}>
             <Box
@@ -108,7 +125,9 @@ const OptionsUsers = () => {
                     </Toolbar>
                 </Box>
                 <UsersList>
-                        {fakeUsers.map(user => (<SingleUserPaper key={user.id} user={user} onClick={() => { console.log("button clicked")}}/>))}
+                    {users.map(user => (<SingleUserPaper key={user._id} user={user} onClick={() => {
+                        console.log("button clicked")
+                    }}/>))}
                 </UsersList>
             </Box>
         </WallpaperDiv>

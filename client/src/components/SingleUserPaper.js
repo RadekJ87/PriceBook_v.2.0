@@ -6,12 +6,11 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 
 const SingleUserPaper = ({user}) => {
-    // use location??
     return (
         <Paper
             elevation={6}
             component={Link}
-            to={`${user.id}`}
+            to={`${user._id}`}
             sx={{
                 display: "flex",
                 justifyContent: "flex-start",
@@ -24,7 +23,7 @@ const SingleUserPaper = ({user}) => {
             }}>
             <Avatar
                 alt="Remy Sharp"
-                src={user?.profilePic}
+                src={user?.profilePic ?? null}
                 sx={{width: 45, height: 45, margin: "0 20px",}}/>
             <Box sx={{
                 display: "flex",

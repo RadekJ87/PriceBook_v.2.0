@@ -18,6 +18,7 @@ authRouter
                 username: req.body.username.trim(),
                 email: req.body.email.trim(),
                 password: String(hash),
+                profilePic: req.body.profilePic ?? ""
             })
 
             const newUser = await user.save();

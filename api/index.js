@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import authRouter from "./routes/auth.js";
 import productRouter from "./routes/products.js";
 import adminRouter from "./routes/admin.js";
+import {createFakeData} from "./utilities/fakeData.js";
 
 const app = express();
 dotenv.config();
@@ -19,6 +20,7 @@ app
     .get('/', (req, res) => {
         res.send('Welcome to Pricebook app!');
     })
+    .get('/test', createFakeData )
     .use('/api/auth', authRouter)
     .use('/api/products', productRouter)
     // .use('/api/users', usersRouter);

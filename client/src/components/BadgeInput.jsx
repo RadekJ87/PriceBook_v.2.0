@@ -26,7 +26,7 @@ export const SmallCameraIconBadge = styled(CameraIcon)(({ theme }) => ({
 
 const BadgeInput = ({badgeComponent}) => {
     return <Box>
-        <label for="avatar">
+        <label htmlFor="avatar">
             {badgeComponent}
         </label>
         <input type="file" id="avatar" style={{display: "none"}}/>

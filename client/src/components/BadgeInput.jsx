@@ -24,12 +24,16 @@ export const SmallCameraIconBadge = styled(CameraIcon)(({ theme }) => ({
     }
 }));
 
-const BadgeInput = ({badgeComponent}) => {
+const BadgeInput = ({badgeComponent, onChange}) => {
+    const handleClick = e => {
+        onChange(e.target.files[0]);
+    }
+
     return <Box>
         <label htmlFor="avatar">
             {badgeComponent}
         </label>
-        <input type="file" id="avatar" style={{display: "none"}}/>
+        <input onChange={handleClick} type="file" id="avatar" accept="image/*" style={{display: "none"}}/>
     </Box>
 }
 

@@ -9,7 +9,6 @@ import test from '../images/backgroundLogin.avif';
 import ProductsSearchBar from "../components/ProductsSearchBar";
 
 
-
 // for mockup
 // const columns = [
 //     {id: 'description', label: 'Opis', minWidthXS: 25, minWidthMD: 170, align: 'center'},
@@ -89,7 +88,8 @@ const Products = () => {
         }
         fetchProducts().catch(console.error);
 
-        return () => {}
+        return () => {
+        }
     }, [search])
 
 
@@ -103,8 +103,9 @@ const Products = () => {
 
     return (
         <WallpaperDiv position="absolute" image={test}>
-            <Box sx={{
-                width: {xs: '380px', md: "1024px", xl: "1600px"},
+            <Box className="wrapper" sx={{
+                //lg macbook
+                width: {xs: '380px', sm: "560px", md: "880px", lg: "1200px", xl: "1600px"},
                 display: 'flex',
                 flexDirection: "column",
                 alignItems: "center",

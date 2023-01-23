@@ -72,14 +72,33 @@ const Inputs = styled(Box)(({theme}) => ({
 
 const UserCreator = () => {
     const [file, setFile] = useState(null);
+    const [newUser, setNewUser] = useState({
+        username: "",
+        email: "",
+        password: "",
+        admin: false,
+        // tutaj sciezka do pliku ze zdjeciem, upload chyba na front do public/assets/images? do sprawdzenia
+    });
 
-    const handleInputChange = (image) => {
+    useEffect(() => {
+        console.log('file -> ', file);
+        console.log('user -> ', newUser);
+    }, [file, newUser])
+
+    const handleUploadImage = (image) => {
         setFile(image);
     }
 
-    useEffect(() =>{
-        console.log('file -> ', file);
-    }, [file])
+    const handleInputChange = (event) => {
+        const isSwitchEvent = event.target.name === 'admin' ? true : false;
+        const key = event.target.name;
+        const value = isSwitchEvent ? !newUser.admin : event.target.value;
+
+        setNewUser({
+            ...newUser,
+            [key]: value,
+        });
+    }
 
     return (
         <FormBox className="form-box" sx={{
@@ -96,7 +115,8 @@ const UserCreator = () => {
                         <Badge
                             overlap="circular"
                             anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
-                            badgeContent={<BadgeInput onChange={handleInputChange} badgeComponent={<SmallCameraIconBadge/>}/>}
+                            badgeContent={<BadgeInput onChange={handleUploadImage}
+                                                      badgeComponent={<SmallCameraIconBadge/>}/>}
                         >
                             <BigAvatar alt="" src={file ? URL.createObjectURL(file) : ""}/>
                         </Badge>
@@ -104,13 +124,13 @@ const UserCreator = () => {
                 </ImageBox>
                 <DataBox>
                     <Inputs>
-                        <Input name="username" placeholder="Nazwa użytkownika"/>
-                        <Input name="email" placeholder="Adres email"/>
-                        <Input name="password" placeholder="Hasło"/>
+                        <Input name="username" placeholder="Nazwa użytkownika" onChange={handleInputChange}/>
+                        <Input name="email" placeholder="Adres email" onChange={handleInputChange}/>
+                        <Input name="password" placeholder="Hasło" onChange={handleInputChange}/>
                         <Box>
                             <FormControlLabel
                                 control={
-                                    <Switch checked={true} onChange={() => console.log('switch')} name="admin"/>
+                                    <Switch name="admin" checked={newUser.admin} onChange={handleInputChange}/>
                                 }
                                 label="Czy dodać uprawienienia administratora?"
                             />

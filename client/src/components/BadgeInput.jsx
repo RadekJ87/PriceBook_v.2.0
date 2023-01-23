@@ -1,6 +1,6 @@
 import React from "react";
 import {styled} from "@mui/material/styles";
-import {Box} from "@mui/material";
+import {Box, Tooltip} from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import CameraIcon from "@mui/icons-material/Camera";
 
@@ -31,7 +31,9 @@ const BadgeInput = ({badgeComponent, onChange}) => {
 
     return <Box>
         <label htmlFor="avatar">
-            {badgeComponent}
+            <Tooltip title="Dodaj zdjęcie">
+                {badgeComponent}
+            </Tooltip>
         </label>
         <input onChange={handleClick} type="file" id="avatar" accept="image/*" style={{display: "none"}}/>
     </Box>

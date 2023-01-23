@@ -1,12 +1,18 @@
 import React, {useEffect, useState} from "react";
-import {Box, Toolbar, Typography, Button} from "@mui/material";
+import axios from "axios";
 import {styled} from "@mui/material/styles";
+import {
+    Box,
+    Toolbar,
+    Typography,
+    Button,
+} from "@mui/material";
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import NotInterestedIcon from '@mui/icons-material/NotInterested';
 import SingleUserPaper from "../components/SingleUserPaper";
 import WallpaperDiv from "../components/WallpaperDiv";
+import UserCreator from "../components/UserCreator";
 import Lathe from "../images/backgroundAdmin.avif";
-import axios from "axios";
 
 const fakeUsers = [
     {
@@ -95,16 +101,12 @@ const MainContainer = styled(Box)(({theme}) => ({
 
 const OptionsUsers = () => {
     const [users, setUsers] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
-    // const [isCreated, setIsCreated] = useState(false);
-    const [isCreated, setIsCreated] = useState(true);
+    const [isCreated, setIsCreated] = useState(false);
 
     useEffect(() => {
-        setIsLoading(true);
         const fetchUsers = async () => {
             const res = await axios.get(`/options/manage-users/`);
             setUsers(res.data);
-            setIsLoading(false);
         }
         fetchUsers().catch(console.error);
 
@@ -133,15 +135,15 @@ const OptionsUsers = () => {
                             }}>
                             Użytkownicy
                         </Typography>
-                        <Button variant="outlined" startIcon={isCreated ? <NotInterestedIcon/> : <PersonAddIcon/>} onClick={toggle}>
+                        <Button variant="outlined" startIcon={isCreated ? <NotInterestedIcon/> : <PersonAddIcon/>}
+                                onClick={toggle}>
                             {isCreated ? "Anuluj dodawanie" : "Dodaj użytkownika"}
                         </Button>
                     </Toolbar>
                 </Box>
                 {isCreated ?
-                    (<MainDiv>
-                        // do osobnego komponentu UserCreator
-                        tworzenie nowego usera
+                    (<MainDiv sx={{ alignContent: 'space-between',justifyContent: "center"}}>
+                          <UserCreator/>
                     </MainDiv>)
                     :
                     (<MainDiv>

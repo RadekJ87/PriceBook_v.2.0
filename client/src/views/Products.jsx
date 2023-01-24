@@ -102,10 +102,11 @@ const Products = () => {
     }
 
     return (
-        <WallpaperDiv position="absolute" image={test}>
+        <WallpaperDiv width="100%" position="absolute" top="5%" image={test}>
             <Box className="wrapper" sx={{
                 //lg macbook
-                width: {xs: '380px', sm: "560px", md: "880px", lg: "1200px", xl: "1600px"},
+                // width: {xs: '380px', sm: "560px", md: "880px", lg: "100%", xl: "100%"},
+                width: "85%",
                 display: 'flex',
                 flexDirection: "column",
                 alignItems: "center",

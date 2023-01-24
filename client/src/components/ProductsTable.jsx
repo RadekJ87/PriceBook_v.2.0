@@ -17,8 +17,8 @@ const ProductsTable = ({products, columns, search}) => {
     };
     return (
         <>
-            {!!products.length ? (<Paper sx={{width: '100%',overflow: 'hidden'}}>
-                    <TableContainer sx={{height: "70vh", maxHeight: {xs: "400px", sm: "510px", md: "540px", lg: "590px"}}}>
+            {!!products.length ? (<Paper sx={{width: '100%', overflow: 'hidden'}}>
+                    <TableContainer sx={{height: "70vh", maxHeight: {xs: "450px", sm: "540px", md: "560px", lg: "620px"}}}>
                         <Table stickyHeader aria-label="sticky table">
                             <CustomizableTableHead columns={columns}/>
                             <TableBody>
@@ -35,8 +35,9 @@ const ProductsTable = ({products, columns, search}) => {
                                                         <TableCell key={column.id} align={column.align} sx={{
                                                             display: {
                                                                 xs: column.displayXS,
-                                                                md: column.displayMD
-                                                            }
+                                                                md: column.displayMD,
+                                                            },
+                                                            fontSize: {xs: "10px", sm: "12px", lg: "16px"},
                                                         }}>
                                                             {column.format && typeof value === 'number'
                                                                 ? column.format(value)
@@ -51,6 +52,11 @@ const ProductsTable = ({products, columns, search}) => {
                         </Table>
                     </TableContainer>
                     <TablePagination
+                        sx={{
+                            '& .MuiTablePagination-toolbar > *': {
+                                fontSize: {xs: "10px", sm: "12px", lg: "16px"},
+                            }
+                        }}
                         rowsPerPageOptions={[10, 25, 50]}
                         labelRowsPerPage='Produktów na stronę:'
                         component="div"

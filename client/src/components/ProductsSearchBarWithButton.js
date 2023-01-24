@@ -30,7 +30,8 @@ const ProductsSearchBarWithButton = ({onSearch}) => {
             flexDirection: {xs: "column", sm: "row"},
             alignItems : {xs: "center"},
             minWidth: {sm: "97%", md: "50%"},
-            gap: {xs: "8px", md: "16px"}
+            gap: {xs: "8px", md: "16px"},
+            marginBottom: {xs: "10px", md: "25px"},
         }}>
             <Box sx={{
                 display: "flex",
@@ -64,5 +65,3 @@ const ProductsSearchBarWithButton = ({onSearch}) => {
 };
 
 export default ProductsSearchBarWithButton;
-
-// onChange={(e)=>setInput(e.target.value)}

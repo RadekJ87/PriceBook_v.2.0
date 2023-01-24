@@ -18,7 +18,7 @@ const ProductsTable = ({products, columns, search}) => {
     return (
         <>
             {!!products.length ? (<Paper sx={{width: '100%', overflow: 'hidden'}}>
-                    <TableContainer sx={{height: "70vh", maxHeight: {xs: "450px", sm: "540px", md: "560px", lg: "620px"}}}>
+                    <TableContainer sx={{height: "70vh", maxHeight: {xs: "450px", sm: "540px", md: "560px", lg: "590px"}}}>
                         <Table stickyHeader aria-label="sticky table">
                             <CustomizableTableHead columns={columns}/>
                             <TableBody>
@@ -37,7 +37,7 @@ const ProductsTable = ({products, columns, search}) => {
                                                                 xs: column.displayXS,
                                                                 md: column.displayMD,
                                                             },
-                                                            fontSize: {xs: "10px", sm: "12px", lg: "16px"},
+                                                            fontSize: {xs: "10px", sm: "12px", lg: "14px"},
                                                         }}>
                                                             {column.format && typeof value === 'number'
                                                                 ? column.format(value)
@@ -54,7 +54,7 @@ const ProductsTable = ({products, columns, search}) => {
                     <TablePagination
                         sx={{
                             '& .MuiTablePagination-toolbar > *': {
-                                fontSize: {xs: "10px", sm: "12px", lg: "16px"},
+                                fontSize: {xs: "10px", sm: "12px", lg: "14px"},
                             }
                         }}
                         rowsPerPageOptions={[10, 25, 50]}

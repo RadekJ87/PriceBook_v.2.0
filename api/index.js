@@ -5,10 +5,18 @@ import authRouter from "./routes/auth.js";
 import productRouter from "./routes/products.js";
 import adminRouter from "./routes/admin.js";
 import {createFakeData} from "./utilities/fakeData.js";
+import cors from 'cors';
+
 
 const app = express();
 dotenv.config();
 
+// added for testing other repo
+const corsOptions = {
+    origin: process.env.CLIENT_APP_URL
+}
+
+app.use(cors());
 app.use(express.json());
 
 mongoose

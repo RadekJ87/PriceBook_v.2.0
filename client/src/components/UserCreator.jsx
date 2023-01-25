@@ -12,10 +12,24 @@ const badge = "https://randomuser.me/api/portraits/thumb/men/76.jpg";
 
 
 const BigAvatar = styled(Avatar)(({theme}) => ({
-    width: 200,
-    height: 200,
     backgroundSize: "cover",
     boxShadow: "4px 6px 15px 5px rgba(110,110,110,0.8)",
+    [theme.breakpoints.up('xs')]: {
+        width: 100,
+        height: 100,
+    },
+    [theme.breakpoints.up('sm')]: {
+        width: 135,
+        height: 135,
+    },
+    [theme.breakpoints.up('md')]: {
+        width: 155,
+        height: 155,
+    },
+    [theme.breakpoints.up('lg')]: {
+        width: 200,
+        height: 200,
+    },
 }));
 
 const FormBox = styled(Box)(({theme}) => ({
@@ -23,8 +37,6 @@ const FormBox = styled(Box)(({theme}) => ({
     flexDirection: "column",
     justifyContent: "space-around",
     padding: "10px",
-    width: "55%",  //te dwa do skalowania
-    height: "500px",
     backgroundColor: "rgba(7, 7, 12, 0.05)",
     border: "1px solid #cccccc",
     boxShadow: "2px 3px 10px 0px rgba(161,161,161,0.7)",
@@ -38,8 +50,13 @@ const FormBox = styled(Box)(({theme}) => ({
 
 const WrapperBox = styled(Box)(({theme}) => ({
     display: "flex",
-    flexDirection: "row",
     height: "85%",
+    [theme.breakpoints.up('xs')]: {
+        flexDirection: "column",
+    },
+    [theme.breakpoints.up('md')]: {
+        flexDirection: "row",
+    },
 }));
 
 const ImageBox = styled(Box)(({theme}) => ({
@@ -51,7 +68,7 @@ const ImageBox = styled(Box)(({theme}) => ({
 
 const DataBox = styled(Box)(({theme}) => ({
     display: "flex",
-    flexDirection: "row",
+    flexDirection: "column",
     alignItems: "left",
     flex: 3,
 }));
@@ -61,12 +78,35 @@ const Inputs = styled(Box)(({theme}) => ({
     flex: 4,
     flexDirection: "column",
     justifyContent: "center",
-    gap: "24px",
-    '&>: not(style)': {
-        marginLeft: "10px",
-        width: "70%"
-
-    }
+    [theme.breakpoints.up('xs')]: {
+        gap: "16px",
+        '&>: not(style)': {
+             fontSize: "13px",
+             width: "80%",
+             margin: "0 auto"
+        },
+    },
+    [theme.breakpoints.up('sm')]: {
+        gap: "21px",
+        '&>: not(style)': {
+            fontSize: "16px",
+        },
+    },
+    [theme.breakpoints.up('md')]: {
+        gap: "18px",
+        '&>: not(style)': {
+            fontSize: "14px",
+            width: "80%"
+        },
+    },
+    [theme.breakpoints.up('lg')]: {
+        gap: "22px",
+        '&>: not(style)': {
+            fontSize: "16px",
+            marginLeft: "10px",
+            width: "70%"
+        },
+    },
 }));
 
 
@@ -102,17 +142,21 @@ const UserCreator = () => {
 
     return (
         <FormBox className="form-box" sx={{
-            width: {md: "70%", lg: "70%", xl: "55%"},
-            height: {lg: "315px", xl: "5500px"},
+            width: {xs: "90%", md: "70%", lg: "55%"}, // wrapper do dodawania
+            height: {xs: "55vh", md: "35vh", lg: "55vh"},
         }}>
-            <WrapperBox>
-                <ImageBox>
-                    <Box sx={{
+            <WrapperBox className="wrapper-box">
+                <ImageBox className="image-box">
+                    <Box className="wrapper-image-box" sx={{
                         display: "flex",
                         alignItems: "center",
                         height: "50%",
                     }}>
                         <Badge
+                            // sx={{
+                            //     width: {xs: "90%", md: "70%", lg: "70%", xl: "55%"}, // wrapper do dodawania
+                            //     height: {xs: "55vh", lg: "315px", xl: "550px"},
+                            // }}
                             overlap="circular"
                             anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
                             badgeContent={<BadgeInput onChange={handleUploadImage}
@@ -122,13 +166,14 @@ const UserCreator = () => {
                         </Badge>
                     </Box>
                 </ImageBox>
-                <DataBox>
-                    <Inputs>
+                <DataBox className="data-box">
+                    <Inputs className="inputs-box">
                         <Input name="username" placeholder="Nazwa użytkownika" onChange={handleInputChange}/>
                         <Input name="email" placeholder="Adres email" onChange={handleInputChange}/>
                         <Input name="password" placeholder="Hasło" onChange={handleInputChange}/>
                         <Box>
                             <FormControlLabel
+                                sx={{'& .MuiFormControlLabel-label': {fontSize: "0.8em"}}}
                                 control={
                                     <Switch name="admin" checked={newUser.admin} onChange={handleInputChange}/>
                                 }

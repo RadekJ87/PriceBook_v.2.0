@@ -16,8 +16,8 @@ const SingleUserPaper = ({user}) => {
                 justifyContent: "flex-start",
                 alignItems: "center",
                 m: 1,
-                width: 280,
-                height: 100,
+                width: {xs: '85%', md: "47%", lg: "31%", xl: "23%"},  //
+                height: {xs: '10vh', md: "10vh"}, //
                 cursor: "pointer",
                 textDecoration: "none",
             }}>
@@ -29,8 +29,8 @@ const SingleUserPaper = ({user}) => {
                 display: "flex",
                 flexDirection: "column",
             }}>
-                <Typography variant="h6" component="h6">{user.username}</Typography>
-                <Typography variant="caption" component="span" color="gray">{user.admin ? "Admin" : "User"}</Typography>
+                <Typography variant="h6" sx={{fontSize: "1em"}} component="h6">{user.username}</Typography>
+                <Typography variant="caption" sx={{fontSize: "0.8em"}} component="span" color="gray">{user.admin ? "Admin" : "User"}</Typography>
             </Box>
         </Paper>
     );

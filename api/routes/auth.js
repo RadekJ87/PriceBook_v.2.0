@@ -18,6 +18,7 @@ authRouter
                 username: req.body.username.trim(),
                 email: req.body.email.trim(),
                 password: String(hash),
+                admin: req.body.admin,
                 profilePic: req.body.profilePic ?? ""
             })
 
@@ -26,8 +27,8 @@ authRouter
 
         } catch (error) {
             // rejestrować będzie tylko admin, dla przyśpieczenia zwróć co się powtarza
-            const err = error.keyValue?.username ?? error.keyValue?.email;
-            res.status(500).json('Powtarza się ' + err)
+            const message = error.keyValue?.username ? `Login ${error.keyValue?.username} jest już zajęty` : `W bazie istnieje już użytkownik zarejestrowany na adres ${error.keyValue?.email}`
+            res.status(500).json(message);
         }
     })
 

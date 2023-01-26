@@ -1,9 +1,9 @@
 import express from "express";
 import {User} from "../models/User.js";
 
-const adminRouter = express.Router();
+const optionsRouter = express.Router();
 
-adminRouter
+optionsRouter
     // getAllUsers
     .get("/manage-users", async (req, res) => {
         try {
@@ -34,4 +34,4 @@ adminRouter
     })
 
 
-export default adminRouter;
+export default optionsRouter;

@@ -3,7 +3,7 @@ import * as dotenv from 'dotenv'
 import mongoose from 'mongoose';
 import authRouter from "./routes/auth.js";
 import productRouter from "./routes/products.js";
-import adminRouter from "./routes/admin.js";
+import optionsRouter from "./routes/options.js";
 import {createFakeData} from "./utilities/fakeData.js";
 import cors from 'cors';
 
@@ -32,7 +32,7 @@ app
     .use('/api/auth', authRouter)
     .use('/api/products', productRouter)
     // .use('/api/users', usersRouter);
-    .use('/api/options', adminRouter);
+    .use('/api/options', optionsRouter);
 
 app.listen(4000, 'localhost', () => {
     console.log('Listening on http://localhost:4000');

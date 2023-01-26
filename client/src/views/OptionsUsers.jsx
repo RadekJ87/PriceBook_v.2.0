@@ -124,7 +124,7 @@ const OptionsUsers = () => {
 
         return () => {
         }
-    }, []);
+    }, [isCreated]);
 
 
     const toggle = () => {
@@ -160,7 +160,7 @@ const OptionsUsers = () => {
                         overflow: {xs: "inherit"},
                         justifyContent: {xs: "center"},
                     }}>
-                        <UserCreator/>
+                        <UserCreator onSuccessfulCreate={toggle}/>
                     </MainDiv>)
                     :
                     (<MainDiv className="main-div">

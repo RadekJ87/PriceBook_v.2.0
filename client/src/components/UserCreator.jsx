@@ -4,6 +4,7 @@ import Avatar from "@mui/material/Avatar";
 import {styled} from "@mui/material/styles";
 import BadgeInput, {SmallCameraIconBadge} from "./BadgeInput";
 import ActionsBox from "./ActionsBox";
+import axios from "axios";
 
 // test
 const avatar = "https://randomuser.me/api/portraits/men/75.jpg";
@@ -110,8 +111,9 @@ const Inputs = styled(Box)(({theme}) => ({
 }));
 
 
-const UserCreator = () => {
+const UserCreator = ({onSuccessfulCreate}) => {
     const [file, setFile] = useState(null);
+    const [error, setError] = useState(null);
     const [newUser, setNewUser] = useState({
         username: "",
         email: "",
@@ -140,6 +142,17 @@ const UserCreator = () => {
         });
     }
 
+    const handleCreate = async (event) => {
+        try{
+            const res = await axios.post(`/auth/register`, newUser);
+            console.log(res);
+            onSuccessfulCreate();
+        } catch (error) {
+            console.log(error.response.data);
+            setError(error.response.data);
+        }
+    }
+
     return (
         <FormBox className="form-box" sx={{
             width: {xs: "90%", md: "70%", lg: "55%"}, // wrapper do dodawania
@@ -153,10 +166,6 @@ const UserCreator = () => {
                         height: "50%",
                     }}>
                         <Badge
-                            // sx={{
-                            //     width: {xs: "90%", md: "70%", lg: "70%", xl: "55%"}, // wrapper do dodawania
-                            //     height: {xs: "55vh", lg: "315px", xl: "550px"},
-                            // }}
                             overlap="circular"
                             anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
                             badgeContent={<BadgeInput onChange={handleUploadImage}
@@ -183,7 +192,7 @@ const UserCreator = () => {
                     </Inputs>
                 </DataBox>
             </WrapperBox>
-            <ActionsBox/>
+            <ActionsBox errorMessage={error} onCreate={handleCreate}/>
         </FormBox>
     );
 };

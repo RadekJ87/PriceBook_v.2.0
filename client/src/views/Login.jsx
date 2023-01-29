@@ -5,9 +5,9 @@ import WallpaperDiv from "../components/WallpaperDiv";
 import {Card, CardContent, Stack, TextField} from "@mui/material";
 import {LoadingButton} from "@mui/lab";
 import {Box, Typography} from "@mui/material";
-import {AuthContext} from "../context/authContext";
+import {AuthContext} from "../context/auth.context";
 import Laser from '../images/backgroundLogin.avif'
-import {loginFailure, loginSuccess, startLoggingUser} from "../actions/authActions";
+import {loginFailure, loginSuccess, startLoggingUser} from "../reducers/actions/auth.actions";
 
 const Login = () => {
     const [credentials, setCredentials] = useState({

@@ -12,9 +12,9 @@ import Brand from '../images/logo_jasne.png';
 import {IconButton, Menu, MenuItem} from "@mui/material";
 import MenuIcon from '@mui/icons-material/Menu';
 import {useContext, useEffect, useState} from "react";
-import {AuthContext} from "../context/authContext";
+import {AuthContext} from "../context/auth.context";
 import jwt_decode from "jwt-decode";
-import {logout} from "../actions/authActions";
+import {logout} from "../reducers/actions/auth.actions";
 
 
 // do opcji menu poza auth

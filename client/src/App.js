@@ -16,8 +16,10 @@ import OptionsUsers from "./views/OptionsUsers";
 import OptionsPrices from "./views/OptionsPrices";
 import OptionsProducts from "./views/OptionProducts";
 import TestView from "./views/TestView";
+import {ProtectedRoute} from "./utils/ProtectedRoute";
+import {userRoles} from "./utils/user-roles";
 
-const Layout = () => {
+export const Layout = () => {
     return (
         <>
             <Navbar/>
@@ -43,39 +45,35 @@ const router = createBrowserRouter([
             },
             {
                 path: "products",
-                element: <Products/>,
+                element: <ProtectedRoute expectedRole={[userRoles.admin, userRoles.basic]} element={<Products/>}/>,
             },
             {
                 path: "options",
                 children: [
                     {
                         index: true,
-                        element: <Options/>,
+                        element: <ProtectedRoute expectedRole={[userRoles.admin]} element={<Options/>}/>,
                     },
-                    // {
-                    //     path: "manage-users",
-                    //     element: <OptionsUsers/>,
-                    // },
                     {
                         path: "manage-users",
                         children: [
                             {
                                 index: true,
-                                element: <OptionsUsers/>,
+                                element: <ProtectedRoute expectedRole={[userRoles.admin]} element={<OptionsUsers/>}/>,
                             },
                             {
                                 path: ':id',
-                                element: <TestView/>,
+                                element: <ProtectedRoute expectedRole={[userRoles.admin]} element={<TestView/>}/>,
                             },
                         ]
                     },
                     {
                         path: "manage-products",
-                        element: <OptionsProducts/>,
+                        element: <ProtectedRoute expectedRole={[userRoles.admin]} element={<OptionsProducts/>}/>,
                     },
                     {
                         path: "manage-prices",
-                        element: <OptionsPrices/>,
+                        element: <ProtectedRoute expectedRole={[userRoles.admin]} element={<OptionsPrices/>}/>,
                     },
                 ]
             },
@@ -84,10 +82,11 @@ const router = createBrowserRouter([
 ]);
 
 
+
 const App = () => {
     return (
         <Box>
-                <RouterProvider router={router}/>
+            <RouterProvider router={router}/>
         </Box>
     );
 }

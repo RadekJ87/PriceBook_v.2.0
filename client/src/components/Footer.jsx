@@ -18,7 +18,7 @@ const Footer = () => {
             }}
         >
             <Typography variant="p" component="h5" fontWeight="200">
-                © 2022 Pricebook | Designed by
+                © 2023 Pricebook | Designed by
                 <Link href="https://github.com/RadekJ87" sx={{textDecoration: "none", color: "black",  fontWeight: 400}}> RadekJ87</Link>
             </Typography>
 

@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 import authRouter from "./routes/auth.js";
 import productRouter from "./routes/products.js";
 import optionsRouter from "./routes/options.js";
-import {createFakeData} from "./utilities/fakeData.js";
+import {createFakeData} from "./utils/fakeData.js";
 import cors from 'cors';
 
 
@@ -31,7 +31,6 @@ app
     .get('/test', createFakeData )
     .use('/api/auth', authRouter)
     .use('/api/products', productRouter)
-    // .use('/api/users', usersRouter);
     .use('/api/options', optionsRouter);
 
 app.listen(4000, 'localhost', () => {

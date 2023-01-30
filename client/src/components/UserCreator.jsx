@@ -1,10 +1,13 @@
 import React, {useEffect, useState} from 'react';
-import {Badge, Box, Fab, FormControlLabel, Input, Switch} from "@mui/material";
+import {Badge, Box, Checkbox, Fab, FormControlLabel, Input, Switch, Tooltip} from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import {styled} from "@mui/material/styles";
 import BadgeInput, {SmallCameraIconBadge} from "./BadgeInput";
 import ActionsBox from "./ActionsBox";
 import axios from "axios";
+import {ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
+import storage from "../firebase";
 
 // test
 const avatar = "https://randomuser.me/api/portraits/men/75.jpg";
@@ -82,9 +85,9 @@ const Inputs = styled(Box)(({theme}) => ({
     [theme.breakpoints.up('xs')]: {
         gap: "16px",
         '&>: not(style)': {
-             fontSize: "13px",
-             width: "80%",
-             margin: "0 auto"
+            fontSize: "13px",
+            width: "80%",
+            margin: "0 auto"
         },
     },
     [theme.breakpoints.up('sm')]: {
@@ -112,8 +115,6 @@ const Inputs = styled(Box)(({theme}) => ({
 
 
 const UserCreator = ({onSuccessfulCreate}) => {
-    const [file, setFile] = useState(null);
-    const [error, setError] = useState(null);
     const [newUser, setNewUser] = useState({
         username: "",
         email: "",
@@ -121,14 +122,53 @@ const UserCreator = ({onSuccessfulCreate}) => {
         admin: false,
         // tutaj sciezka do pliku ze zdjeciem, upload chyba na front do public/assets/images? do sprawdzenia
     });
+    const [hasUserImage, setHasUserImage] = useState(false);
+    const [file, setFile] = useState(null);
+    const [progress, setProgress] = useState(0);
+    const [error, setError] = useState(null);
+    const [isUploading, setIsUploading] = useState(false);
 
     useEffect(() => {
-        console.log('file -> ', file);
-        console.log('user -> ', newUser);
-    }, [file, newUser])
+        if(isUploading){
+            handleUploadImage();
+        }
+        setIsUploading(false);
 
-    const handleUploadImage = (image) => {
+    }, [isUploading])
+
+
+    const handleAddImageFile = (image) => {
         setFile(image);
+    }
+
+    const handleUploadImage = () => {
+        const name = `${new Date().toISOString().replace('-', '/').split('T')[0].replace('-', '/')}_${file?.name}`;
+        const storageRef = ref(storage, 'user-images/' + file.name);
+        const uploadTask = uploadBytesResumable(storageRef, file);
+
+        uploadTask.on('state_changed',
+            (snapshot) => {
+                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                console.log('Upload is ' + progress + '% done');
+                switch (snapshot.state) {
+                    case 'paused':
+                        console.log('Upload is paused');
+                        break;
+                    case 'running':
+                        console.log('Upload is running');
+                        break;
+                }
+            },
+            (error) => {
+                console.log('Error Firebase', error)
+            },
+            () => {
+                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                    console.log('File available at', downloadURL);
+                });
+            }
+        );
+
     }
 
     const handleInputChange = (event) => {
@@ -142,8 +182,8 @@ const UserCreator = ({onSuccessfulCreate}) => {
         });
     }
 
-    const handleCreate = async (event) => {
-        try{
+    const handleCreateNewUser = async (event) => {
+        try {
             const res = await axios.post(`/auth/register`, newUser);
             console.log(res);
             onSuccessfulCreate();
@@ -168,7 +208,7 @@ const UserCreator = ({onSuccessfulCreate}) => {
                         <Badge
                             overlap="circular"
                             anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
-                            badgeContent={<BadgeInput onChange={handleUploadImage}
+                            badgeContent={<BadgeInput onChange={handleAddImageFile}
                                                       badgeComponent={<SmallCameraIconBadge/>}/>}
                         >
                             <BigAvatar alt="" src={file ? URL.createObjectURL(file) : ""}/>
@@ -180,7 +220,7 @@ const UserCreator = ({onSuccessfulCreate}) => {
                         <Input name="username" placeholder="Nazwa użytkownika" onChange={handleInputChange}/>
                         <Input name="email" placeholder="Adres email" onChange={handleInputChange}/>
                         <Input name="password" placeholder="Hasło" onChange={handleInputChange}/>
-                        <Box>
+                        <Box className="switch-box">
                             <FormControlLabel
                                 sx={{'& .MuiFormControlLabel-label': {fontSize: "0.8em"}}}
                                 control={
@@ -189,10 +229,33 @@ const UserCreator = ({onSuccessfulCreate}) => {
                                 label="Czy dodać uprawienienia administratora?"
                             />
                         </Box>
+                        <Box className="image-upload-box" sx={{display: "flex", flexDirection: "row"}}>
+                            <FormControlLabel
+                                sx={{'& .MuiFormControlLabel-label': {fontSize: "0.8em"}}}
+                                control={
+                                    <Checkbox name="user-image" checked={hasUserImage}
+                                              onChange={e => setHasUserImage((prev) => !prev)}/>
+                                }
+                                label="Czy użytkownik będzie miał zdjęcie?"
+                            />
+                            {hasUserImage &&
+                                <Tooltip title="Prześlij zdjęcie do Firebase">
+                                    <Fab
+                                        variant="circular"
+                                        size="small"
+                                        color="warning"
+                                        sx={{fontSize: {xs: "0.7em", md: "0.8em", xl: "0.85em"}}}
+                                        // onClick={() => console.log('firebase')}
+                                        onClick={(e)=> setIsUploading(true)}
+                                    >
+                                        <LocalFireDepartmentIcon sx={{fontSize: {xs: "2em"}}}/>
+                                    </Fab>
+                                </Tooltip>}
+                        </Box>
                     </Inputs>
                 </DataBox>
             </WrapperBox>
-            <ActionsBox errorMessage={error} onCreate={handleCreate}/>
+            <ActionsBox errorMessage={error} onCreate={handleCreateNewUser}/>
         </FormBox>
     );
 };

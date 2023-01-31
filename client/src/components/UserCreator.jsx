@@ -1,18 +1,19 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {Badge, Box, Checkbox, Fab, FormControlLabel, Input, Switch, Tooltip} from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import {styled} from "@mui/material/styles";
 import BadgeInput, {SmallCameraIconBadge} from "./BadgeInput";
 import ActionsBox from "./ActionsBox";
 import axios from "axios";
-import {ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import {ref, uploadBytesResumable, getDownloadURL} from "firebase/storage";
 import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
 import storage from "../firebase";
+import CircularProgressWithLabel from "./CircularProgressWithLabel";
 
 // test
-const avatar = "https://randomuser.me/api/portraits/men/75.jpg";
+// const avatar = "https://randomuser.me/api/portraits/men/75.jpg";
 // const avatar = "https://picsum.photos/id/237/200/300";
-const badge = "https://randomuser.me/api/portraits/thumb/men/76.jpg";
+// const badge = "https://randomuser.me/api/portraits/thumb/men/76.jpg";
 
 
 const BigAvatar = styled(Avatar)(({theme}) => ({
@@ -77,7 +78,7 @@ const DataBox = styled(Box)(({theme}) => ({
     flex: 3,
 }));
 
-const Inputs = styled(Box)(({theme}) => ({
+const Inputs = styled(Box)(({theme, hasUserProfileImage}) => ({
     display: "flex",
     flex: 4,
     flexDirection: "column",
@@ -107,7 +108,7 @@ const Inputs = styled(Box)(({theme}) => ({
         gap: "22px",
         '&>: not(style)': {
             fontSize: "16px",
-            marginLeft: "10px",
+            marginLeft: hasUserProfileImage ? "10px" : "none",
             width: "70%"
         },
     },
@@ -115,56 +116,78 @@ const Inputs = styled(Box)(({theme}) => ({
 
 
 const UserCreator = ({onSuccessfulCreate}) => {
+
+    //reducer koniecznie
     const [newUser, setNewUser] = useState({
         username: "",
         email: "",
         password: "",
         admin: false,
-        // tutaj sciezka do pliku ze zdjeciem, upload chyba na front do public/assets/images? do sprawdzenia
+        profilePic: ""
     });
-    const [hasUserImage, setHasUserImage] = useState(false);
+    const [hasUserProfileImage, setHasUserProfileImage] = useState(false);
     const [file, setFile] = useState(null);
     const [progress, setProgress] = useState(0);
     const [error, setError] = useState(null);
     const [isUploading, setIsUploading] = useState(false);
 
-    useEffect(() => {
-        if(isUploading){
-            handleUploadImage();
-        }
-        setIsUploading(false);
-
-    }, [isUploading])
+    // console.log({
+    //     "newUser": newUser,
+    //     "hasUserProfileImage": hasUserProfileImage,
+    //     "file": file,
+    //     "progress": progress,
+    //     "error": error,
+    //     "isUploading": isUploading
+    // })
 
 
     const handleAddImageFile = (image) => {
+        if (error) {
+            setError(null);
+        }
         setFile(image);
     }
 
-    const handleUploadImage = () => {
-        const name = `${new Date().toISOString().replace('-', '/').split('T')[0].replace('-', '/')}_${file?.name}`;
-        const storageRef = ref(storage, 'user-images/' + file.name);
+    const handleUploadImage = async (e) => {
+        e.preventDefault();
+
+        if (!file) {
+            setError('Chyba zapomniałeś dodać obraz...')
+            return;
+        }
+
+        const name = `${new Date().toISOString().replace('-', '_').split('T')[0].replace('-', '_')}_${file?.name}`;
+        const storageRef = ref(storage, 'user-images/' + name);
         const uploadTask = uploadBytesResumable(storageRef, file);
+
+        setIsUploading(true);
 
         uploadTask.on('state_changed',
             (snapshot) => {
-                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                const progress = ((snapshot.bytesTransferred / snapshot.totalBytes) * 100).toFixed(2);
                 console.log('Upload is ' + progress + '% done');
+                setProgress(Number(progress))
                 switch (snapshot.state) {
                     case 'paused':
-                        console.log('Upload is paused');
+                        console.log('Przesyłanie do Firebase jest wstrzymane');
                         break;
                     case 'running':
-                        console.log('Upload is running');
+                        console.log('Przesyłanie do Firebase jest w toku');
                         break;
                 }
             },
             (error) => {
                 console.log('Error Firebase', error)
+                setError('Błąd przy dodawaniu obrazu do Firebase')
             },
             () => {
                 getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
                     console.log('File available at', downloadURL);
+                    setIsUploading(false);
+                    setNewUser({
+                        ...newUser,
+                        ['profilePic']: downloadURL,
+                    });
                 });
             }
         );
@@ -199,7 +222,7 @@ const UserCreator = ({onSuccessfulCreate}) => {
             height: {xs: "55vh", md: "35vh", lg: "55vh"},
         }}>
             <WrapperBox className="wrapper-box">
-                <ImageBox className="image-box">
+                {hasUserProfileImage && <ImageBox className="image-box">
                     <Box className="wrapper-image-box" sx={{
                         display: "flex",
                         alignItems: "center",
@@ -214,10 +237,11 @@ const UserCreator = ({onSuccessfulCreate}) => {
                             <BigAvatar alt="" src={file ? URL.createObjectURL(file) : ""}/>
                         </Badge>
                     </Box>
-                </ImageBox>
+                </ImageBox>}
+
                 <DataBox className="data-box">
                     <Inputs className="inputs-box">
-                        <Input name="username" placeholder="Nazwa użytkownika" onChange={handleInputChange}/>
+                        <Input required name="username" placeholder="Nazwa użytkownika" onChange={handleInputChange}/>
                         <Input name="email" placeholder="Adres email" onChange={handleInputChange}/>
                         <Input name="password" placeholder="Hasło" onChange={handleInputChange}/>
                         <Box className="switch-box">
@@ -229,33 +253,44 @@ const UserCreator = ({onSuccessfulCreate}) => {
                                 label="Czy dodać uprawienienia administratora?"
                             />
                         </Box>
-                        <Box className="image-upload-box" sx={{display: "flex", flexDirection: "row"}}>
+                        <Box className="image-upload-box" sx={{
+                            display: "flex",
+                            flexDirection: "row",
+                            alignItems: "center",
+                            justifyContent: "space-between"
+                        }}>
                             <FormControlLabel
                                 sx={{'& .MuiFormControlLabel-label': {fontSize: "0.8em"}}}
                                 control={
-                                    <Checkbox name="user-image" checked={hasUserImage}
-                                              onChange={e => setHasUserImage((prev) => !prev)}/>
+                                    <Checkbox disabled={isUploading} name="user-image" checked={hasUserProfileImage}
+                                              onChange={e => setHasUserProfileImage((prev) => !prev)}/>
                                 }
                                 label="Czy użytkownik będzie miał zdjęcie?"
                             />
-                            {hasUserImage &&
-                                <Tooltip title="Prześlij zdjęcie do Firebase">
+                            {hasUserProfileImage &&
+                            isUploading ? (<CircularProgressWithLabel value={progress}/>) : (
+                                <Tooltip
+                                    title="Prześlij zdjęcie do Firebase">
                                     <Fab
-                                        variant="circular"
+                                        // disabled={isUploading}
+                                        variant="extended"
                                         size="small"
                                         color="warning"
-                                        sx={{fontSize: {xs: "0.7em", md: "0.8em", xl: "0.85em"}}}
-                                        // onClick={() => console.log('firebase')}
-                                        onClick={(e)=> setIsUploading(true)}
+                                        sx={{
+                                            fontSize: {xs: "0.7em", md: "0.8em", xl: "0.85em"},
+                                            width: {xs: "40px", sm: "45px", lg: "47px"},
+                                            height: {xs: "40px", sm: "45px", lg: "47px"},
+                                        }}
+                                        onClick={handleUploadImage}
                                     >
                                         <LocalFireDepartmentIcon sx={{fontSize: {xs: "2em"}}}/>
                                     </Fab>
-                                </Tooltip>}
+                                </Tooltip>)}
                         </Box>
                     </Inputs>
                 </DataBox>
             </WrapperBox>
-            <ActionsBox errorMessage={error} onCreate={handleCreateNewUser}/>
+            <ActionsBox errorMessage={error} onCreate={handleCreateNewUser} isDisabled={isUploading}/>
         </FormBox>
     );
 };

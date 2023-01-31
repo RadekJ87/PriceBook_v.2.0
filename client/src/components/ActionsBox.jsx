@@ -1,8 +1,9 @@
 import React from 'react';
 import {Box, Fab, Typography} from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
-const ActionsBox = ({errorMessage, onCreate}) => {
+const ActionsBox = ({errorMessage, onCreate, isDisabled}) => {
     return (
         <Box sx={{
             fontSize: {xs: '8px', sm: "10px", md: "12px", lg: "14px"},
@@ -22,14 +23,26 @@ const ActionsBox = ({errorMessage, onCreate}) => {
                 {errorMessage ?? null}
             </Typography>
             <Fab
+                disabled={isDisabled}
                 variant="extended"
                 size="small"
                 color="success"
                 sx={{fontSize: {xs: "0.9em", md: "0.7em", xl: "0.8em"}}}
                 onClick={onCreate}
             >
-                <CheckCircleIcon sx={{fontSize: {xs: "2em"}, mr: "8px"}}/>
-                Dodaj do bazy
+                {isDisabled ?
+                    (<>
+                        <CloudUploadIcon sx={{fontSize: {xs: "2em"}, mr: "8px"}}/>
+                        Upload to Firebase
+                    </>)
+                    :
+                    (
+                        <>
+                            <CheckCircleIcon sx={{fontSize: {xs: "2em"}, mr: "8px"}}/>
+                            Dodaj do bazy
+                        </>
+                    )
+                }
             </Fab>
         </Box>
     );

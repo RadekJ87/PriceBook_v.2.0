@@ -1,13 +1,13 @@
 import React, {useState} from 'react';
-import {Badge, Box, Checkbox, Fab, FormControlLabel, Input, Switch, Tooltip} from "@mui/material";
-import Avatar from "@mui/material/Avatar";
+import {useForm} from "react-hook-form";
+import {ref, uploadBytesResumable, getDownloadURL} from "firebase/storage";
+import storage from "../config/firebase";
+import axios from "axios";
 import {styled} from "@mui/material/styles";
+import {Badge, Box, Checkbox, Fab, FormControlLabel, Input, Switch, Tooltip, Avatar} from "@mui/material";
+import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
 import BadgeInput, {SmallCameraIconBadge} from "./BadgeInput";
 import ActionsBox from "./ActionsBox";
-import axios from "axios";
-import {ref, uploadBytesResumable, getDownloadURL} from "firebase/storage";
-import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
-import storage from "../firebase";
 import CircularProgressWithLabel from "./CircularProgressWithLabel";
 
 // test
@@ -16,7 +16,7 @@ import CircularProgressWithLabel from "./CircularProgressWithLabel";
 // const badge = "https://randomuser.me/api/portraits/thumb/men/76.jpg";
 
 
-const BigAvatar = styled(Avatar)(({theme}) => ({
+export const BigAvatar = styled(Avatar)(({theme}) => ({
     backgroundSize: "cover",
     boxShadow: "4px 6px 15px 5px rgba(110,110,110,0.8)",
     [theme.breakpoints.up('xs')]: {
@@ -37,7 +37,7 @@ const BigAvatar = styled(Avatar)(({theme}) => ({
     },
 }));
 
-const FormBox = styled(Box)(({theme}) => ({
+export const FormBox = styled(Box)(({theme}) => ({
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-around",
@@ -53,7 +53,7 @@ const FormBox = styled(Box)(({theme}) => ({
     }
 }));
 
-const WrapperBox = styled(Box)(({theme}) => ({
+export const WrapperBox = styled(Box)(({theme}) => ({
     display: "flex",
     height: "85%",
     [theme.breakpoints.up('xs')]: {
@@ -64,21 +64,21 @@ const WrapperBox = styled(Box)(({theme}) => ({
     },
 }));
 
-const ImageBox = styled(Box)(({theme}) => ({
+export const ImageBox = styled(Box)(({theme}) => ({
     display: "flex",
     flex: 2,
     alignItems: "center",
     justifyContent: "center",
 }));
 
-const DataBox = styled(Box)(({theme}) => ({
+export const DataBox = styled(Box)(({theme}) => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "left",
     flex: 3,
 }));
 
-const Inputs = styled(Box)(({theme, hasUserProfileImage}) => ({
+export const Inputs = styled(Box)(({theme, hasUserProfileImage}) => ({
     display: "flex",
     flex: 4,
     flexDirection: "column",
@@ -142,6 +142,10 @@ const UserCreator = ({onSuccessfulCreate}) => {
 
 
     const handleAddImageFile = (image) => {
+        if (image.size > 819200) {
+            setError('Dopuszczalny rozmiar zdjęcia 800KB');
+            return;
+        }
         if (error) {
             setError(null);
         }
@@ -157,6 +161,7 @@ const UserCreator = ({onSuccessfulCreate}) => {
         }
 
         const name = `${new Date().toISOString().replace('-', '_').split('T')[0].replace('-', '_')}_${file?.name}`;
+        // const storageRef = ref(storage, 'user-images/' + name);
         const storageRef = ref(storage, 'user-images/' + name);
         const uploadTask = uploadBytesResumable(storageRef, file);
 
@@ -241,9 +246,9 @@ const UserCreator = ({onSuccessfulCreate}) => {
 
                 <DataBox className="data-box">
                     <Inputs className="inputs-box">
-                        <Input required name="username" placeholder="Nazwa użytkownika" onChange={handleInputChange}/>
-                        <Input name="email" placeholder="Adres email" onChange={handleInputChange}/>
-                        <Input name="password" placeholder="Hasło" onChange={handleInputChange}/>
+                        <Input value={newUser.username} name="username" placeholder="Nazwa użytkownika" onChange={handleInputChange}/>
+                        <Input value={newUser.email} name="email" placeholder="Adres email" onChange={handleInputChange}/>
+                        <Input value={newUser.password} name="password" placeholder="Hasło" onChange={handleInputChange}/>
                         <Box className="switch-box">
                             <FormControlLabel
                                 sx={{'& .MuiFormControlLabel-label': {fontSize: "0.8em"}}}
@@ -270,7 +275,7 @@ const UserCreator = ({onSuccessfulCreate}) => {
                             {hasUserProfileImage &&
                             isUploading ? (<CircularProgressWithLabel value={progress}/>) : (
                                 <Tooltip
-                                    title="Prześlij zdjęcie do Firebase">
+                                    title="Prześlij zdjęcie do Firebase, zalecana maksymalna rozdzielczość 256x256 pikseli">
                                     <Fab
                                         // disabled={isUploading}
                                         variant="extended"

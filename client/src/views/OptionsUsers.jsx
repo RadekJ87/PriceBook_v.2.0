@@ -13,6 +13,7 @@ import SingleUserPaper from "../components/SingleUserPaper";
 import WallpaperDiv from "../components/WallpaperDiv";
 import UserCreator from "../components/UserCreator";
 import Lathe from "../images/backgroundAdmin.avif";
+import UserCreatorReactHookForm from "../components/UserCreatorReactHookForm";
 
 const fakeUsers = [
     {
@@ -160,7 +161,8 @@ const OptionsUsers = () => {
                         overflow: {xs: "inherit"},
                         justifyContent: {xs: "center"},
                     }}>
-                        <UserCreator onSuccessfulCreate={toggle}/>
+                        {/*<UserCreator onSuccessfulCreate={toggle}/>*/}
+                        <UserCreatorReactHookForm onSuccessfulCreate={toggle}/>
                     </MainDiv>)
                     :
                     (<MainDiv className="main-div">

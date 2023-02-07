@@ -45,18 +45,16 @@ const ControlledInputs = styled(Box)(({theme, hasUserProfileImage}) => ({
         }
     },
     [theme.breakpoints.up('sm')]: {
-        gap: "21px",
         '&>: not(style)': {
-            fontSize: "16px",
+            fontSize: "14px",
         },
         '& > * .Mui-error, .MuiFormLabel-root': {
-            fontSize: "16px"
+            fontSize: "14px"
         },
     },
     [theme.breakpoints.up('md')]: {
-        gap: "18px",
         '&>: not(style)': {
-            fontSize: "14px",
+            fontSize: "13px",
             width: "80%"
         },
         '& > * .Mui-error, .MuiFormLabel-root': {
@@ -64,15 +62,40 @@ const ControlledInputs = styled(Box)(({theme, hasUserProfileImage}) => ({
         },
     },
     [theme.breakpoints.up('lg')]: {
-        gap: "14px",
         '&>: not(style)': {
             fontSize: "16px",
             marginLeft: hasUserProfileImage ? "10px" : "none",
             width: "70%"
         },
-        '& > * .Mui-error, .MuiFormLabel-root': {
-            fontSize: "16px"
-        },
+    },
+}));
+
+
+const StyledFormBox = styled(FormBox)(({theme}) => ({
+    [theme.breakpoints.up('xs')]: {
+        width: "90%",
+        height: "55vh",
+    },
+    [theme.breakpoints.up('md')]: {
+        width: "70%",
+        height: "35vh",
+    },
+    [theme.breakpoints.up('lg')]: {
+        width: "55%",
+        height: "55vh",
+    },
+}));
+
+const StyledImageBox = styled(ImageBox)(({theme}) => ({
+    flex: 1,
+    [theme.breakpoints.up('xs')]: {
+        marginBottom: "10px",
+    },
+    [theme.breakpoints.up('sm')]: {
+        marginBottom: "15px",
+    },
+    [theme.breakpoints.up('md')]: {
+        marginBottom: "0px",
     },
 }));
 
@@ -154,7 +177,6 @@ const UserCreator = ({onSuccessfulCreate}) => {
         const newUser = {...data, profilePic: userProfileImageURL, hasUserProfileImage};
         try {
             const res = await axios.post(`/auth/register`, newUser);
-            console.log(res);
             onSuccessfulCreate();
         } catch (error) {
             console.log(error.response.data);
@@ -163,30 +185,27 @@ const UserCreator = ({onSuccessfulCreate}) => {
     }
 
     return (
-        <FormBox className="form-box" sx={{
-            width: {xs: "90%", md: "70%", lg: "55%"}, // wrapper do dodawania
-            height: {xs: "55vh", md: "35vh", lg: "55vh"},
-        }}>
+        <StyledFormBox className="styled-form-box">
             <WrapperBox className="wrapper-box">
-                {hasUserProfileImage && <ImageBox
-                    className="image-box"
-                    sx={{flex: 1}}>
-                    <Box className="wrapper-image-box" sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        height: "50%",
-                    }}>
-                        <Badge
-                            overlap="circular"
-                            anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
-                            badgeContent={<BadgeInput onChange={handleAddImageFile}
-                                                      badgeComponent={<SmallCameraIconBadge/>}/>}
-                        >
-                            <BigAvatar alt="" src={file ? URL.createObjectURL(file) : ""}/>
-                        </Badge>
-                    </Box>
-                </ImageBox>}
-                <DataBox className="data-box">
+                {
+                    hasUserProfileImage &&
+                    <StyledImageBox className="styled-image-box">
+                        <Box className="wrapper-image-box" sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            height: "50%",
+                        }}>
+                            <Badge
+                                overlap="circular"
+                                anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
+                                badgeContent={<BadgeInput onChange={handleAddImageFile}
+                                                          badgeComponent={<SmallCameraIconBadge/>}/>}
+                            >
+                                <BigAvatar alt="" src={file ? URL.createObjectURL(file) : ""}/>
+                            </Badge>
+                        </Box>
+                    </StyledImageBox>}
+                <DataBox className="data-box" sx={{flex: {md: 2}}}>
                     <ControlledInputs
                         className="inputs-box"
                         sx={{justifyContent: "space-evenly"}}>
@@ -263,7 +282,6 @@ const UserCreator = ({onSuccessfulCreate}) => {
                                 <Tooltip
                                     title="Prześlij zdjęcie do Firebase, zalecana maksymalna rozdzielczość 256x256 pikseli">
                                     <Fab
-
                                         variant="extended"
                                         size="small"
                                         color="warning"
@@ -283,7 +301,7 @@ const UserCreator = ({onSuccessfulCreate}) => {
                 </DataBox>
             </WrapperBox>
             <ActionsBox errorMessage={error} onCreate={handleSubmit(handleCreateNewUser)} isDisabled={isUploading}/>
-        </FormBox>
+        </StyledFormBox>
     );
 };
 

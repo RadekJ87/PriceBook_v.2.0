@@ -161,6 +161,7 @@ const OptionsUsers = () => {
                         overflow: {xs: "inherit"},
                         justifyContent: {xs: "center"},
                     }}>
+                        {/* two versions avalable without and with validation*/}
                         {/*<UserCreator onSuccessfulCreate={toggle}/>*/}
                         <UserCreatorReactHookForm onSuccessfulCreate={toggle}/>
                     </MainDiv>)

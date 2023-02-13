@@ -5,13 +5,14 @@
 Pracuję obecnie nad ulepszoną wersją aplikacji Pricebook
 
 Co nowego? <br>
- - przede wszystkim poprawiony FE przy wykorzystaniu Material UI w wersji 5.
+ - przede wszystkim poprawiony FE przy wykorzystaniu Material UI w wersji 5.,
+ - React Router Dom w najnowszej wersji 6.,
  - autoryzacja i uwierzytelnianie - JWT,
  - role użytkowników, a co za tym idzie ograniczony dostęp do niektórych funkcjonalności,
  - protected routes,
  - zmiana DB z relacyjnej bazy MySQL na bazę nierelacyjną MongoDB,
  - wykorzystanie Firebase,
- - walidacja z wykorzystanie react-hook-form,
+ - walidacja z wykorzystanie React-Hook-Form oraz Yup,
  <br>
  Z pewnościa na tym nie koniec, bo pomysłów przybywa 👍🏼
  

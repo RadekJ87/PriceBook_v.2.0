@@ -15,7 +15,7 @@ import {Box} from "@mui/material";
 import OptionsUsers from "./views/OptionsUsers";
 import OptionsPrices from "./views/OptionsPrices";
 import OptionsProducts from "./views/OptionProducts";
-import TestView from "./views/TestView";
+import SingleUserPage from "./views/SingleUserPage";
 import {ProtectedRoute} from "./utils/ProtectedRoute";
 import {userRoles} from "./utils/user-roles";
 
@@ -63,7 +63,7 @@ const router = createBrowserRouter([
                             },
                             {
                                 path: ':id',
-                                element: <ProtectedRoute expectedRole={[userRoles.admin]} element={<TestView/>}/>,
+                                element: <ProtectedRoute expectedRole={[userRoles.admin]} element={<SingleUserPage/>}/>,
                             },
                         ]
                     },

@@ -60,7 +60,7 @@ const fakeUsers = [
     },
 ]
 
-const MainContainer = styled(Box)(({theme}) => ({
+export const MainContainer = styled(Box)(({theme}) => ({
     width: "80vw",
     height: "75vh",
     borderRadius: "15px",
@@ -117,6 +117,7 @@ const OptionsUsers = () => {
     const [isCreated, setIsCreated] = useState(false);
 
     useEffect(() => {
+        // jak bedzie sie sypac 500 network zmien na try/catch
         const fetchUsers = async () => {
             const res = await axios.get(`/options/manage-users/`);
             setUsers(res.data);
